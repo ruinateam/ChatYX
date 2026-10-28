@@ -105,7 +105,7 @@ async function settleUntil(predicate: () => boolean): Promise<void> {
 describe("RTE Azure TTS", () => {
   test("encodes the exact proxied Azure request URL", () => {
     expect(buildAzureTtsUrl("Привет & hello?", "en-US-GuyNeural")).toBe(
-      "https://ext.rte.net.ru:8443/https://chatsemban.justdavi.dev/api/tts?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%20%26%20hello%3F&voice=en-US-GuyNeural",
+      "https://chat.addefan.ru:9443/api/tts?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82%20%26%20hello%3F&voice=en-US-GuyNeural",
     );
   });
 
