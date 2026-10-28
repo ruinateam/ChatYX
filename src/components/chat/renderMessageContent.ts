@@ -185,7 +185,7 @@ export function renderMessageWithEmotes(
   const { resolveUrl, displayText = message.message } = options;
   const size =
     SIZE_CONFIGS[config.size as keyof typeof SIZE_CONFIGS] || SIZE_CONFIGS[2];
-  const rawMessage = displayText;
+  let rawMessage = displayText;
   const emoteScale = getEmoteScale(config);
   // Matches ChatMessage's uniform nickname color: when enabled, @mentions
   // must use the same color instead of paints or per-user colors.
@@ -204,16 +204,18 @@ export function renderMessageWithEmotes(
     const gifScale = Number.isFinite(config.gifScale)
       ? Math.min(Math.max(config.gifScale, 0.25), 3)
       : 1;
-    for (const gif of message.gifs) {
+    for (const [index, gif] of message.gifs.entries()) {
       const start = codePointToCodeUnit(message.message, gif.start);
       const end = codePointToCodeUnit(message.message, gif.end + 1);
       const token = message.message.substring(start, end);
       const url = twitchGifUrl(gif.url);
       if (!token || !url) continue;
+      const placeholder = `__TWITCH_GIF_${index}__`;
+      rawMessage = rawMessage.replaceAll(token, placeholder);
       const resolvedUrl = resolveUrl(url, "rte");
-      replacements[token] = {
+      replacements[placeholder] = {
         kind: "html",
-        html: `<span class="gif-container"><img class="chat-gif" src="${escapeAttr(resolvedUrl)}" alt="GIF" title="GIF" style="max-height: ${Math.round(size.emoteMaxHeight * 5 * gifScale)}px;" /></span>`,
+        html: `<span class="gif-container"><img class="chat-gif" src="${escapeAttr(resolvedUrl)}" alt="${escapeAttr(token)}" title="${escapeAttr(token)}" style="max-height: ${Math.round(size.emoteMaxHeight * 5 * gifScale)}px;" /></span>`,
         isOverlayTarget: true,
       };
     }

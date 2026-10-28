@@ -168,7 +168,27 @@ describe("renderMessageWithEmotes display text", () => {
 
     expect(html).toContain('class="chat-gif"');
     expect(html).toContain("/200.webp?token=a=b");
-    expect(html).toContain('alt="GIF"');
+    expect(html).toContain('alt="[GIF]"');
+  });
+
+  test("renders Twitch GIFs when the fallback text contains spaces", () => {
+    const text = "[bee and puppycat money GIF by Cartoon Hangover]";
+    const original = message(text, []);
+    original.gifs = [{
+      start: 0,
+      end: text.length - 1,
+      id: "gif-spaces",
+      url: "https://media1.giphy.com/media/VTo5JzsXz2gak/giphy.gif",
+    }];
+    const html = render(original, undefined, {
+      ...DEFAULT_CHAT_CONFIG,
+      showGifs: true,
+    });
+
+    expect(html).toContain('class="chat-gif"');
+    expect(html).toContain('alt="[bee and puppycat money GIF by Cartoon Hangover]"');
+    expect(html).toContain('src="https://media1.giphy.com/media/VTo5JzsXz2gak/giphy.gif"');
+    expect(html.replace(/<[^>]*>/g, "")).toBe("");
   });
 
   test("routes Giphy GIFs through RTE when the proxy is enabled", () => {
