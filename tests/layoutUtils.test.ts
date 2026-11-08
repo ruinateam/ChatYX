@@ -5,6 +5,7 @@ import {
   getScrollPosition,
   isScrolledToEnd,
   scrollToLatest,
+  stepSmoothScroll,
 } from "../src/services/chat/runtime/layoutManager";
 
 function createContainer(
@@ -87,6 +88,33 @@ describe("chat layout scrolling", () => {
       "smooth",
     );
     expect(container.lastScroll).toEqual({ top: 600, behavior: "smooth" });
+  });
+});
+
+describe("smooth scroll glide", () => {
+  test("starts from rest without a first-frame jump", () => {
+    const next = stepSmoothScroll({ position: 0, velocity: 0 }, 166, 16);
+    expect(next.position).toBeLessThan(166 / 10);
+    expect(next.velocity).toBeGreaterThan(0);
+  });
+
+  test("settles on the target without overshooting", () => {
+    let state = { position: 0, velocity: 0 };
+    let peak = 0;
+    for (let frame = 0; frame < 60; frame++) {
+      state = stepSmoothScroll(state, 100, 16);
+      peak = Math.max(peak, state.position);
+    }
+    expect(peak).toBeLessThanOrEqual(100.01);
+    expect(Math.abs(state.position - 100)).toBeLessThan(0.5);
+  });
+
+  test("a retarget mid-glide keeps the motion instead of restarting it", () => {
+    let state = { position: 0, velocity: 0 };
+    for (let frame = 0; frame < 5; frame++) state = stepSmoothScroll(state, 100, 16);
+    const next = stepSmoothScroll(state, 140, 16);
+    expect(next.position).toBeGreaterThan(state.position);
+    expect(next.velocity).toBeGreaterThan(state.velocity);
   });
 });
 

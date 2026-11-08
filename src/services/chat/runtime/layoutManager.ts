@@ -163,6 +163,35 @@ export function isScrolledToEnd(
   return getScrollPosition(container, options) - current <= threshold;
 }
 
+const SMOOTH_SCROLL_STIFFNESS = 18;
+
+export interface SmoothScrollState {
+  position: number;
+  velocity: number;
+}
+
+/**
+ * Advances a critically damped spring toward `target` by the exact solution
+ * over `elapsedMs`. Starting from rest the glide accelerates smoothly instead
+ * of leaving at full speed, and a retarget keeps the current velocity, so a
+ * burst of messages reads as one continuous glide.
+ */
+export function stepSmoothScroll(
+  state: SmoothScrollState,
+  target: number,
+  elapsedMs: number,
+): SmoothScrollState {
+  const seconds = Math.min(50, Math.max(0, elapsedMs)) / 1000;
+  const stiffness = SMOOTH_SCROLL_STIFFNESS;
+  const offset = state.position - target;
+  const slope = state.velocity + stiffness * offset;
+  const decay = Math.exp(-stiffness * seconds);
+  return {
+    position: target + (offset + slope * seconds) * decay,
+    velocity: (state.velocity - stiffness * slope * seconds) * decay,
+  };
+}
+
 /**
  * Owns one overlay container's layout: the published stylesheet, the layout
  * classes and the scroll behaviour, including the smooth follow that keeps
@@ -177,6 +206,7 @@ export class LayoutManager {
   private smoothScrollTarget: number | undefined;
   private smoothScrollLastTime: number | undefined;
   private smoothScrollPosition: number | undefined;
+  private smoothScrollVelocity: number | undefined;
   private settleFrame: number | undefined;
 
   constructor(
@@ -232,6 +262,7 @@ export class LayoutManager {
     this.smoothScrollTarget = undefined;
     this.smoothScrollLastTime = undefined;
     this.smoothScrollPosition = undefined;
+    this.smoothScrollVelocity = undefined;
   }
 
   /**
@@ -271,13 +302,14 @@ export class LayoutManager {
   }
 
   private animateSmoothScroll(target: number): void {
-    // Exponential follow: retargeting only moves the goal, so velocity stays
+    // Spring follow: retargeting only moves the goal, so velocity stays
     // continuous no matter how often new messages arrive.
     this.smoothScrollTarget = target;
     if (this.smoothScrollFrame !== undefined) return;
 
     this.smoothScrollLastTime = performance.now();
     this.smoothScrollPosition = this.currentScroll();
+    this.smoothScrollVelocity = 0;
     const step = (now: number) => {
       if (
         this.smoothScrollTarget === undefined ||
@@ -297,12 +329,18 @@ export class LayoutManager {
         this.smoothScrollTarget = undefined;
         this.smoothScrollLastTime = undefined;
         this.smoothScrollPosition = undefined;
+        this.smoothScrollVelocity = undefined;
         return;
       }
 
-      const factor = 1 - Math.exp(-elapsed / 140);
-      this.smoothScrollPosition = current + remaining * factor;
-      this.setCurrentScroll(this.smoothScrollPosition);
+      const next = stepSmoothScroll(
+        { position: current, velocity: this.smoothScrollVelocity ?? 0 },
+        this.smoothScrollTarget,
+        elapsed,
+      );
+      this.smoothScrollPosition = next.position;
+      this.smoothScrollVelocity = next.velocity;
+      this.setCurrentScroll(next.position);
       this.smoothScrollFrame = window.requestAnimationFrame(step);
     };
 
