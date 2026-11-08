@@ -1,10 +1,26 @@
 import { createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { Input } from "~/components/ui/input";
-import { PROVIDERS, parseVoiceCatalog, type Voice } from "./voiceCatalogData";
-export { parseVoiceCatalog };
+import {
+  parseVoiceCatalog,
+  VOICE_PROVIDERS,
+  type Voice,
+} from "~/components/setup/voiceCatalogParser";
 import { t } from "~/i18n";
 
 const VOICES_URL = "/voices.txt";
+
+const PROVIDERS = [
+  {
+    id: VOICE_PROVIDERS[0],
+    title: "ChatIS / Streamlabs",
+    command: "!chat tts -s Maxim текст",
+  },
+  {
+    id: VOICE_PROVIDERS[1],
+    title: "JustDavi / Azure",
+    command: "!chat tts -s Dmitry текст",
+  },
+] as const;
 
 async function loadVoiceCatalog(): Promise<Voice[]> {
   const response = await fetch(VOICES_URL, { credentials: "same-origin" });

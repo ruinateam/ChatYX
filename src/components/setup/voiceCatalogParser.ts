@@ -1,17 +1,9 @@
-export const PROVIDERS = [
-  {
-    id: "ChatIS / Streamlabs",
-    title: "ChatIS / Streamlabs",
-    command: "!chat tts -s Maxim текст",
-  },
-  {
-    id: "JustDavi / Azure",
-    title: "JustDavi / Azure",
-    command: "!chat tts -s Dmitry текст",
-  },
+export const VOICE_PROVIDERS = [
+  "ChatIS / Streamlabs",
+  "JustDavi / Azure",
 ] as const;
 
-export type VoiceProvider = (typeof PROVIDERS)[number]["id"];
+export type VoiceProvider = (typeof VOICE_PROVIDERS)[number];
 
 export type Voice = {
   readonly provider: VoiceProvider;
@@ -22,7 +14,7 @@ export type Voice = {
 };
 
 function isVoiceProvider(value: string): value is VoiceProvider {
-  return PROVIDERS.some((provider) => provider.id === value);
+  return VOICE_PROVIDERS.some((provider) => provider === value);
 }
 
 export function parseVoiceCatalog(source: string): Voice[] {
@@ -58,8 +50,8 @@ export function parseVoiceCatalog(source: string): Voice[] {
 
   return voices.sort(
     (left, right) =>
-      PROVIDERS.findIndex((provider) => provider.id === left.provider) -
-        PROVIDERS.findIndex((provider) => provider.id === right.provider) ||
+      VOICE_PROVIDERS.indexOf(left.provider) -
+        VOICE_PROVIDERS.indexOf(right.provider) ||
       left.voice.localeCompare(right.voice),
   );
 }

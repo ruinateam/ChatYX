@@ -163,6 +163,35 @@ export function isScrolledToEnd(
   return getScrollPosition(container, options) - current <= threshold;
 }
 
+const SMOOTH_SCROLL_STIFFNESS = 18;
+
+export interface SmoothScrollState {
+  position: number;
+  velocity: number;
+}
+
+/**
+ * Advances a critically damped spring toward `target` by the exact solution
+ * over `elapsedMs`. Starting from rest the glide accelerates smoothly instead
+ * of leaving at full speed, and a retarget keeps the current velocity, so a
+ * burst of messages reads as one continuous glide.
+ */
+export function stepSmoothScroll(
+  state: SmoothScrollState,
+  target: number,
+  elapsedMs: number,
+): SmoothScrollState {
+  const seconds = Math.min(50, Math.max(0, elapsedMs)) / 1000;
+  const stiffness = SMOOTH_SCROLL_STIFFNESS;
+  const offset = state.position - target;
+  const slope = state.velocity + stiffness * offset;
+  const decay = Math.exp(-stiffness * seconds);
+  return {
+    position: target + (offset + slope * seconds) * decay,
+    velocity: (state.velocity - stiffness * slope * seconds) * decay,
+  };
+}
+
 /**
  * Owns one overlay container's layout: the published stylesheet, the layout
  * classes and the scroll behaviour, including the smooth follow that keeps
@@ -176,6 +205,9 @@ export class LayoutManager {
   private smoothScrollFrame: number | undefined;
   private smoothScrollTarget: number | undefined;
   private smoothScrollLastTime: number | undefined;
+  private smoothScrollPosition: number | undefined;
+  private smoothScrollVelocity: number | undefined;
+  private settleFrame: number | undefined;
 
   constructor(
     container: HTMLElement,
@@ -208,15 +240,29 @@ export class LayoutManager {
    * container leaves with the runtime that owned it.
    */
   cleanup(): void {
+    this.cancelSmoothScroll();
+    this.cancelSettle();
+    document
+      .querySelectorAll('style[id="chat-layout"]')
+      .forEach((element) => element.remove());
+  }
+
+  private cancelSettle(): void {
+    if (this.settleFrame !== undefined) {
+      window.cancelAnimationFrame(this.settleFrame);
+      this.settleFrame = undefined;
+    }
+  }
+
+  private cancelSmoothScroll(): void {
     if (this.smoothScrollFrame !== undefined) {
       window.cancelAnimationFrame(this.smoothScrollFrame);
       this.smoothScrollFrame = undefined;
     }
     this.smoothScrollTarget = undefined;
     this.smoothScrollLastTime = undefined;
-    document
-      .querySelectorAll('style[id="chat-layout"]')
-      .forEach((element) => element.remove());
+    this.smoothScrollPosition = undefined;
+    this.smoothScrollVelocity = undefined;
   }
 
   /**
@@ -256,12 +302,14 @@ export class LayoutManager {
   }
 
   private animateSmoothScroll(target: number): void {
-    // Exponential follow: retargeting only moves the goal, so velocity stays
+    // Spring follow: retargeting only moves the goal, so velocity stays
     // continuous no matter how often new messages arrive.
     this.smoothScrollTarget = target;
     if (this.smoothScrollFrame !== undefined) return;
 
     this.smoothScrollLastTime = performance.now();
+    this.smoothScrollPosition = this.currentScroll();
+    this.smoothScrollVelocity = 0;
     const step = (now: number) => {
       if (
         this.smoothScrollTarget === undefined ||
@@ -273,18 +321,26 @@ export class LayoutManager {
 
       const elapsed = Math.min(50, Math.max(0, now - this.smoothScrollLastTime));
       this.smoothScrollLastTime = now;
-      const current = this.currentScroll();
+      const current = this.smoothScrollPosition ?? this.currentScroll();
       const remaining = this.smoothScrollTarget - current;
       if (Math.abs(remaining) < 0.5) {
         this.setCurrentScroll(this.smoothScrollTarget);
         this.smoothScrollFrame = undefined;
         this.smoothScrollTarget = undefined;
         this.smoothScrollLastTime = undefined;
+        this.smoothScrollPosition = undefined;
+        this.smoothScrollVelocity = undefined;
         return;
       }
 
-      const factor = 1 - Math.exp(-elapsed / 140);
-      this.setCurrentScroll(current + remaining * factor);
+      const next = stepSmoothScroll(
+        { position: current, velocity: this.smoothScrollVelocity ?? 0 },
+        this.smoothScrollTarget,
+        elapsed,
+      );
+      this.smoothScrollPosition = next.position;
+      this.smoothScrollVelocity = next.velocity;
+      this.setCurrentScroll(next.position);
       this.smoothScrollFrame = window.requestAnimationFrame(step);
     };
 
@@ -306,12 +362,14 @@ export class LayoutManager {
       this.autoScroll ||
       isScrolledToEnd(this.container, scrollOptions);
     if (!shouldScroll) return;
+    this.cancelSettle();
 
     const scroll = () => {
       const target = getScrollPosition(this.container, scrollOptions);
       if (behavior === "smooth" && typeof window !== "undefined") {
         this.animateSmoothScroll(target);
       } else {
+        this.cancelSmoothScroll();
         scrollToLatest(this.container, scrollOptions, behavior);
       }
     };
@@ -319,9 +377,18 @@ export class LayoutManager {
 
     if (!settle || behavior === "smooth" || typeof window === "undefined") return;
 
-    window.requestAnimationFrame(() => {
-      scroll();
-      window.setTimeout(scroll, 60);
+    this.settleFrame = window.requestAnimationFrame(() => {
+      this.settleFrame = undefined;
+      let framesRemaining = 2;
+      const settleAfterLayout = () => {
+        if (--framesRemaining > 0) {
+          this.settleFrame = window.requestAnimationFrame(settleAfterLayout);
+          return;
+        }
+        this.settleFrame = undefined;
+        scroll();
+      };
+      this.settleFrame = window.requestAnimationFrame(settleAfterLayout);
     });
   }
 
