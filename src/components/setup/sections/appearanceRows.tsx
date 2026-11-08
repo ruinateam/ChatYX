@@ -116,15 +116,24 @@ export function createAppearanceRows(source: AppearanceRowsSource): ControlRow[]
       when: () => font() === "0",
       control: (labelId) => (
         <div class="flex flex-col gap-2">
-          <Input
-            aria-labelledby={labelId}
-            type="text"
-            value={fontCustom()}
-            onInput={(e) => setFontCustom(e.currentTarget.value)}
-            placeholder={t("setup.customFontPlaceholder")}
-            disabled={font() !== "0"}
-            class={cn(font() !== "0" && "opacity-50")}
-          />
+          <div class="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              class="inline-flex h-10 shrink-0 items-center rounded-md border border-input bg-background px-2.5 text-base text-foreground"
+              style={{ "font-family": fontCustom() || undefined }}
+            >
+              Aa
+            </span>
+            <Input
+              aria-labelledby={labelId}
+              type="text"
+              value={fontCustom()}
+              onInput={(e) => setFontCustom(e.currentTarget.value)}
+              placeholder={t("setup.customFontPlaceholder")}
+              disabled={font() !== "0"}
+              class={cn(font() !== "0" && "opacity-50")}
+            />
+          </div>
           <Show when={localFontBrowser()}>
             <div class="grid grid-cols-1 gap-2 sm:grid-cols-[150px_minmax(0,1fr)]">
               <Button
