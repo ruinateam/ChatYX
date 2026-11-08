@@ -48,3 +48,20 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Monocraft */
+@font-face {
+  font-family: "Monocraft";
+  src: url("/v3/font/Monocraft-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Monocraft";
+  src: url("/v3/font/Monocraft-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

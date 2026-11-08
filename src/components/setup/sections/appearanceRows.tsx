@@ -106,6 +106,7 @@ export function createAppearanceRows(source: AppearanceRowsSource): ControlRow[]
           <option value="11">Open Sans</option>
           <option value="12">Alsina (Vsauce)</option>
           <option value="13">BF Mono</option>
+          <option value="14">Monocraft</option>
         </SetupSelect>
       ),
     },

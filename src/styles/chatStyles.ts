@@ -219,6 +219,7 @@ export const FONTS = [
   "'Open Sans', sans-serif",
   "'AlsinaUltrajada', sans-serif",
   "'BF Mono', monospace",
+  "'Monocraft', monospace",
 ] as const;
 
 export const getFontFamily = (config: ChatConfig): string => {
