@@ -42,6 +42,8 @@ export function applySetupImport(
   if (patch.fontCustom !== undefined) setters.fontCustom(patch.fontCustom);
   if (patch.stroke !== undefined) setters.stroke(String(patch.stroke === false ? 0 : patch.stroke));
   if (patch.shadow !== undefined) setters.shadow(String(patch.shadow === false ? 0 : patch.shadow));
+  if (patch.shadowColor !== undefined) setters.shadowColor(patch.shadowColor);
+  if (patch.strokeColor !== undefined) setters.strokeColor(patch.strokeColor);
   if (patch.emoteScale !== undefined) setters.emoteScale(String(patch.emoteScale));
   if (patch.smallCaps !== undefined) setters.smallCaps(patch.smallCaps);
   if (patch.nlAfterName !== undefined) setters.nlAfterName(patch.nlAfterName);

@@ -31,6 +31,7 @@ type VisualSettingKey =
   | "overlayPadding"
   | "platformMarker"
   | "shadow"
+  | "shadowColor"
   | "showChannelPointRewards"
   | "showGifs"
   | "showGigantifiedEmotes"
@@ -40,6 +41,7 @@ type VisualSettingKey =
   | "size"
   | "smallCaps"
   | "stroke"
+  | "strokeColor"
   | "eventColorDefault"
   | "eventColorFirst"
   | "eventColorHighlight"
@@ -103,6 +105,7 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       overlayPadding: DEFAULT_CHAT_CONFIG.overlayPadding,
       platformMarker: DEFAULT_CHAT_CONFIG.platformMarker,
       shadow: DEFAULT_CHAT_CONFIG.shadow,
+      shadowColor: DEFAULT_CHAT_CONFIG.shadowColor,
       showChannelPointRewards: DEFAULT_CHAT_CONFIG.showChannelPointRewards,
       showGifs: DEFAULT_CHAT_CONFIG.showGifs,
       showGigantifiedEmotes: DEFAULT_CHAT_CONFIG.showGigantifiedEmotes,
@@ -112,6 +115,7 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       size: DEFAULT_CHAT_CONFIG.size,
       smallCaps: DEFAULT_CHAT_CONFIG.smallCaps,
       stroke: DEFAULT_CHAT_CONFIG.stroke,
+      strokeColor: DEFAULT_CHAT_CONFIG.strokeColor,
       ...DEFAULT_EVENT_COLORS,
       eventColorOpacity: DEFAULT_CHAT_CONFIG.eventColorOpacity,
       twitchEventBold: DEFAULT_CHAT_CONFIG.twitchEventBold,
@@ -144,6 +148,7 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       overlayPadding: 10,
       platformMarker: "stripe",
       shadow: false,
+      shadowColor: DEFAULT_CHAT_CONFIG.shadowColor,
       showChannelPointRewards: false,
       showGifs: false,
       showGigantifiedEmotes: true,
@@ -153,6 +158,7 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       size: 1,
       smallCaps: true,
       stroke: false,
+      strokeColor: DEFAULT_CHAT_CONFIG.strokeColor,
       ...DEFAULT_EVENT_COLORS,
       eventColorOpacity: 0,
       twitchEventBold: false,
@@ -193,7 +199,7 @@ export function toVisualSetupPatch<T extends Partial<Record<VisualSettingKey, un
     "removalAnimation", "fadeAnimation",
     "emoteScale", "font", "fontCustom", "fontWeight", "gifScale", "gigantifiedEmoteScale", "highlightTwitchEvents", "lineHeight", "linkColor", "linkMode", "nickFontWeight",
     "overlayBackgroundColor", "overlayBackgroundOpacity", "overlayBackgroundRadius", "overlayBorderWidth", "overlayBorderColor",
-    "overlayPadding", "platformMarker", "shadow", "showChannelPointRewards", "showGifs", "showGigantifiedEmotes", "showHighlightedMessages", "showPredictions", "showPredictionsOnlyWhileActive", "size", "smallCaps", "stroke",
+    "overlayPadding", "platformMarker", "shadow", "shadowColor", "showChannelPointRewards", "showGifs", "showGigantifiedEmotes", "showHighlightedMessages", "showPredictions", "showPredictionsOnlyWhileActive", "size", "smallCaps", "stroke", "strokeColor",
     "eventColorDefault", "eventColorFirst", "eventColorHighlight", "eventColorReward", "eventColorSubscription", "eventColorRaid", "eventColorStreak", "eventColorPowerUp", "eventColorAnnPrimary", "eventColorAnnPurple", "eventColorAnnBlue", "eventColorAnnGreen", "eventColorAnnOrange", "eventColorOpacity", "twitchEventBold", "twitchEventItalic", "usersColor",
   ];
 

@@ -65,12 +65,18 @@ export const SIZE_CONFIGS = {
   },
 } as const;
 
-/** Shadow filters by preset, indexed the way the config stores them. */
-const SHADOW_FILTERS = {
-  1: "drop-shadow(2px 2px 0.2rem black)",
-  2: "drop-shadow(2px 2px 0.35rem black)",
-  3: "drop-shadow(2px 2px 0.5rem black)",
+/** Shadow blur radii by preset, indexed the way the config stores them. */
+const SHADOW_BLURS = {
+  1: "0.2rem",
+  2: "0.35rem",
+  3: "0.5rem",
 } as const;
+
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+
+function cssHexColor(value: string): string {
+  return HEX_COLOR.test(value) ? value : "#000000";
+}
 
 const STROKE_WIDTHS = {
   1: "1px",
@@ -146,12 +152,13 @@ export function getOverlayStyleVariables(
   };
 
   if (config.shadow) {
+    const blur = SHADOW_BLURS[config.shadow as keyof typeof SHADOW_BLURS];
     variables["--chat-shadow-filter"] =
-      SHADOW_FILTERS[config.shadow as keyof typeof SHADOW_FILTERS];
+      `drop-shadow(2px 2px ${blur} ${cssHexColor(config.shadowColor)})`;
   }
   if (config.stroke) {
     variables["--chat-stroke"] =
-      `${STROKE_WIDTHS[config.stroke as keyof typeof STROKE_WIDTHS]} black`;
+      `${STROKE_WIDTHS[config.stroke as keyof typeof STROKE_WIDTHS]} ${cssHexColor(config.strokeColor)}`;
     variables["--chat-paint-order"] = "stroke fill";
   }
 

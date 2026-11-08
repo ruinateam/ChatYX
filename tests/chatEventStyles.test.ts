@@ -114,8 +114,30 @@ describe("chat event style variables", () => {
       shadow: 3,
       stroke: 4,
     });
-    expect(on["--chat-shadow-filter"]).toBe("drop-shadow(2px 2px 0.5rem black)");
-    expect(on["--chat-stroke"]).toBe("4px black");
+    expect(on["--chat-shadow-filter"]).toBe("drop-shadow(2px 2px 0.5rem #000000)");
+    expect(on["--chat-stroke"]).toBe("4px #000000");
     expect(on["--chat-paint-order"]).toBe("stroke fill");
+  });
+
+  test("uses the configured shadow and stroke colors and falls back to black", () => {
+    const custom = getOverlayStyleVariables({
+      ...DEFAULT_CHAT_CONFIG,
+      shadow: 1,
+      stroke: 2,
+      shadowColor: "#ff0000",
+      strokeColor: "#00ff00",
+    });
+    expect(custom["--chat-shadow-filter"]).toBe("drop-shadow(2px 2px 0.2rem #ff0000)");
+    expect(custom["--chat-stroke"]).toBe("2px #00ff00");
+
+    const invalid = getOverlayStyleVariables({
+      ...DEFAULT_CHAT_CONFIG,
+      shadow: 1,
+      stroke: 2,
+      shadowColor: "red; color: blue",
+      strokeColor: "",
+    });
+    expect(invalid["--chat-shadow-filter"]).toBe("drop-shadow(2px 2px 0.2rem #000000)");
+    expect(invalid["--chat-stroke"]).toBe("2px #000000");
   });
 });

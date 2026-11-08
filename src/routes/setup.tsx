@@ -213,6 +213,8 @@ export default function ChatSetup() {
       ? "0"
       : String(DEFAULT_CHAT_CONFIG.stroke),
   );
+  const [shadowColor, setShadowColor] = createSignal(DEFAULT_CHAT_CONFIG.shadowColor);
+  const [strokeColor, setStrokeColor] = createSignal(DEFAULT_CHAT_CONFIG.strokeColor);
   const [fade, setFade] = createSignal(
     DEFAULT_CHAT_CONFIG.fade === false ? "0" : String(DEFAULT_CHAT_CONFIG.fade),
   );
@@ -535,7 +537,9 @@ const [activeSection, setActiveSection] =
       fontWeight: setFontWeight,
       fontCustom: setFontCustom,
       stroke: setStroke,
+      strokeColor: setStrokeColor,
       shadow: setShadow,
+      shadowColor: setShadowColor,
       emoteScale: setEmoteScale,
       smallCaps: setSmallCaps,
       nlAfterName: setNlAfterName,
@@ -632,7 +636,9 @@ const [activeSection, setActiveSection] =
     nickFontWeight: nickFontWeight(),
     fontCustom: fontCustom(),
     shadow: shadow(),
+    shadowColor: shadowColor(),
     stroke: stroke(),
+    strokeColor: strokeColor(),
     fade: fade(),
     animation: animation(),
     removalAnimation: removalAnimation(),
@@ -1066,8 +1072,12 @@ const [activeSection, setActiveSection] =
   const stylingRows = createStylingRows({
     shadow,
     setShadow,
+    shadowColor,
+    setShadowColor,
     stroke,
     setStroke,
+    strokeColor,
+    setStrokeColor,
     fade,
     setFade,
     overlayBackgroundColor,
@@ -1499,8 +1509,8 @@ const [activeSection, setActiveSection] =
                 icon={ColorsIcon}
                 hidden={activeSection() !== "styling"}
               >
-                <div class="setup-field-group"><h3>{t("setup.textReadability")}</h3><ControlRows rows={stylingRows.slice(0, 3)} /></div>
-                <div class="setup-field-group"><h3>{t("setup.messageBacking")}</h3><ControlRows rows={stylingRows.slice(3)} /></div>
+                <div class="setup-field-group"><h3>{t("setup.textReadability")}</h3><ControlRows rows={stylingRows.slice(0, 5)} /></div>
+                <div class="setup-field-group"><h3>{t("setup.messageBacking")}</h3><ControlRows rows={stylingRows.slice(5)} /></div>
                 <Show when={toInt(overlayBorderWidth(), 0) > 0}>
                   <div class="setup-field-group"><h3>{t("setup.borderColor")}</h3><ColorPickerField label={t("setup.borderColor")} color={overlayBorderColor().slice(0, 7)} opacity={borderColorOpacity()} onChange={({ color, opacity }) => setOverlayBorderColor(`${color}${Math.round(opacity * 2.55).toString(16).padStart(2, "0")}`)} /></div>
                 </Show>

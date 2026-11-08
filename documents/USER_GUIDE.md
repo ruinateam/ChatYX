@@ -41,7 +41,9 @@ kickws=ws://localhost:9905
 | `nfw` | Font weight ника |
 | `fc` | Custom font при custom-пресете |
 | `sh` | Shadow |
+| `shadowcolor` | Цвет тени текста, `#rrggbb` (по умолчанию `#000000`) |
 | `st` | Stroke |
+| `strokecolor` | Цвет обводки текста, `#rrggbb` (по умолчанию `#000000`) |
 | `fd` | Fade в секундах |
 | `an` | Режим анимации |
 | `ms` | Скорость анимации сообщений |

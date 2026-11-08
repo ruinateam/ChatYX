@@ -152,6 +152,25 @@ describe("chat URL params", () => {
     expect(parseChatConfigFromSearchParams(params)).toEqual(cfg);
   });
 
+  test("shadow and stroke colors round-trip through the overlay URL", () => {
+    const defaults = chatConfigToSearchParams(DEFAULT_CHAT_CONFIG);
+    expect(defaults.get("shadowcolor")).toBeNull();
+    expect(defaults.get("strokecolor")).toBeNull();
+
+    const cfg: ChatConfig = {
+      ...DEFAULT_CHAT_CONFIG,
+      channel: "xqc",
+      shadow: 2,
+      shadowColor: "#ff0000",
+      stroke: 3,
+      strokeColor: "#00ff00",
+    };
+    const params = chatConfigToSearchParams(cfg);
+    expect(params.get("shadowcolor")).toBe("#ff0000");
+    expect(params.get("strokecolor")).toBe("#00ff00");
+    expect(parseChatConfigFromSearchParams(params)).toEqual(cfg);
+  });
+
   test("omits the default event palette and reads legacy event colors", () => {
     expect(chatConfigToSearchParams(DEFAULT_CHAT_CONFIG).get("evc")).toBeNull();
 

@@ -44,7 +44,9 @@ export type SetupFormState = {
   nickFontWeight: string;
   fontCustom: string;
   shadow: string;
+  shadowColor: string;
   stroke: string;
+  strokeColor: string;
   fade: string;
   animation: ChatAnimationMode;
   removalAnimation: MessageRemovalMode;
@@ -144,7 +146,9 @@ export function buildSetupConfig(
     ),
     fontCustom: form.fontCustom,
     shadow: toPositiveIntOrFalse(form.shadow),
+    shadowColor: normalizeHexColor(form.shadowColor, DEFAULT_CHAT_CONFIG.shadowColor),
     stroke: toPositiveIntOrFalse(form.stroke),
+    strokeColor: normalizeHexColor(form.strokeColor, DEFAULT_CHAT_CONFIG.strokeColor),
     fade: toPositiveIntOrFalse(form.fade),
     animation: form.animation,
     removalAnimation: form.removalAnimation,

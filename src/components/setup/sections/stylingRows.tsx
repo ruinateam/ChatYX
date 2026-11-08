@@ -10,8 +10,12 @@ import type { ControlRow } from "../SetupLayout";
 export type StylingRowsSource = {
   shadow: () => string;
   setShadow: (value: string) => void;
+  shadowColor: () => string;
+  setShadowColor: (value: string) => void;
   stroke: () => string;
   setStroke: (value: string) => void;
+  strokeColor: () => string;
+  setStrokeColor: (value: string) => void;
   fade: () => string;
   setFade: (value: string) => void;
   overlayBackgroundColor: () => string;
@@ -34,8 +38,12 @@ export function createStylingRows(source: StylingRowsSource): ControlRow[] {
   const {
     shadow,
     setShadow,
+    shadowColor,
+    setShadowColor,
     stroke,
     setStroke,
+    strokeColor,
+    setStrokeColor,
     fade,
     setFade,
     overlayBackgroundColor,
@@ -67,6 +75,19 @@ export function createStylingRows(source: StylingRowsSource): ControlRow[] {
       ),
     },
     {
+      label: () => t("setup.shadowColor"),
+      when: () => shadow() !== "0",
+      control: (_labelId) => (
+        <ColorPickerField
+          label={t("setup.shadowColor")}
+          color={shadowColor()}
+          opacity={100}
+          showOpacity={false}
+          onChange={({ color }) => setShadowColor(color)}
+        />
+      ),
+    },
+    {
       label: () => t("setup.textStroke"),
       control: (labelId) => (
         <SetupSelect
@@ -80,6 +101,19 @@ export function createStylingRows(source: StylingRowsSource): ControlRow[] {
           <option value="3">{t("setup.thick")}</option>
           <option value="4">{t("setup.veryThick")}</option>
         </SetupSelect>
+      ),
+    },
+    {
+      label: () => t("setup.strokeColor"),
+      when: () => stroke() !== "0",
+      control: (_labelId) => (
+        <ColorPickerField
+          label={t("setup.strokeColor")}
+          color={strokeColor()}
+          opacity={100}
+          showOpacity={false}
+          onChange={({ color }) => setStrokeColor(color)}
+        />
       ),
     },
     {

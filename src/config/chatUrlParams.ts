@@ -59,6 +59,8 @@ export interface ChatConfig extends EventColorConfig {
   fontCustom: string;
   stroke: number | false;
   shadow: number | false;
+  shadowColor: string;
+  strokeColor: string;
   emoteScale: number;
   smallCaps: boolean;
   nlAfterName: boolean;
@@ -127,7 +129,9 @@ export const DEFAULT_CHAT_CONFIG: Readonly<ChatConfig> = Object.freeze({
   nickFontWeight: DEFAULT_FONT_WEIGHT,
   fontCustom: "",
   shadow: 1,
+  shadowColor: "#000000",
   stroke: false,
+  strokeColor: "#000000",
   fade: 60,
   animation: "fade",
   removalAnimation: "none",
@@ -351,6 +355,8 @@ const PARAMS: { [K in keyof ChatConfig]?: ParamDef<K> } = {
   },
   shadow: { query: "sh", kind: "intOrFalse", aliases: ["shadow"] },
   stroke: { query: "st", kind: "intOrFalse", aliases: ["stroke"] },
+  shadowColor: { query: "shadowcolor", kind: "string", aliases: ["shadow_color"] },
+  strokeColor: { query: "strokecolor", kind: "string", aliases: ["stroke_color"] },
   fade: { query: "fd", kind: "secondsOrFalse", aliases: ["fade"] },
   animation: { query: "an", kind: "string", aliases: ["animation"] },
   removalAnimation: { query: "removean", kind: "string", aliases: ["removalAnimation"] },
