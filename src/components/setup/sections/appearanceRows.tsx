@@ -113,6 +113,7 @@ export function createAppearanceRows(source: AppearanceRowsSource): ControlRow[]
     {
       label: () => t("setup.customFontName"),
       hint: () => t("setup.customFontHint"),
+      when: () => font() === "0",
       control: (labelId) => (
         <div class="flex flex-col gap-2">
           <Input

@@ -28,6 +28,7 @@ export type ControlRow = {
   label: SetupText;
   control: (labelId: string) => JSX.Element;
   hint?: SetupText;
+  when?: () => boolean;
 };
 
 export type ToggleRow = {
@@ -101,6 +102,7 @@ export function ControlRows(props: { rows: ControlRow[] }) {
         {(row) => {
           const labelId = `setup-control-label-${createUniqueId()}`;
           return (
+          <Show when={row.when?.() ?? true}>
           <div class="setup-control-row">
             <div class="flex min-w-0 flex-col gap-0.5">
               <div id={labelId} class="text-sm font-medium leading-normal text-foreground">
@@ -114,6 +116,7 @@ export function ControlRows(props: { rows: ControlRow[] }) {
             </div>
             <div class="min-w-0 w-full">{row.control(labelId)}</div>
           </div>
+          </Show>
           );
         }}
       </For>
