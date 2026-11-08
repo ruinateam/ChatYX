@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { parseVoiceCatalog } from "../src/components/setup/VoiceCatalog";
+import { parseVoiceCatalog } from "../src/components/setup/voiceCatalogParser";
 
 describe("voice catalog", () => {
   test("parses and sorts the Russian provider tables", () => {
