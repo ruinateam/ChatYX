@@ -13,16 +13,16 @@ function hexToRgb(hex: string): string {
   return `${r}, ${g}, ${b}`;
 }
 
-export function createOverlayRootStyle(visible: boolean) {
+export function createOverlayRootStyle(visible: boolean, widthMode: "parent" | "content" = "parent") {
   return {
     position: "absolute",
     inset: "0",
-    width: "100%",
+    width: widthMode === "content" ? "fit-content" : "100%",
     height: "100%",
     "max-height": "100vh",
     display: "flex",
     "flex-direction": "column",
-    "align-items": "stretch",
+    "align-items": widthMode === "content" ? "flex-start" : "stretch",
     "box-sizing": "border-box",
     "z-index": "10000",
     "pointer-events": "none",

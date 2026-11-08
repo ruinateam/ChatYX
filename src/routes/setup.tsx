@@ -370,6 +370,9 @@ export default function ChatSetup() {
   const [overlayBorderColor, setOverlayBorderColor] = createSignal(
     DEFAULT_CHAT_CONFIG.overlayBorderColor,
   );
+  const [overlayWidthMode, setOverlayWidthMode] = createSignal<"parent" | "content">(
+    DEFAULT_CHAT_CONFIG.overlayWidthMode,
+  );
   const borderColorOpacity = createMemo(() => {
     const alpha = overlayBorderColor().slice(7);
     return /^[0-9a-f]{2}$/i.test(alpha)
@@ -566,6 +569,7 @@ const [activeSection, setActiveSection] =
       overlayPadding: setOverlayPadding,
       overlayBorderWidth: setOverlayBorderWidth,
       overlayBorderColor: setOverlayBorderColor,
+      overlayWidthMode: setOverlayWidthMode,
       highlightTwitchEvents: setHighlightTwitchEvents,
       eventColorOpacity: setEventColorOpacity,
       eventColorDefault: (value) => setEventColor("eventColorDefault", value),
@@ -681,6 +685,7 @@ const [activeSection, setActiveSection] =
     overlayPadding: overlayPadding(),
     overlayBorderWidth: overlayBorderWidth(),
     overlayBorderColor: overlayBorderColor(),
+    overlayWidthMode: overlayWidthMode(),
     highlightTwitchEvents: highlightTwitchEvents(),
     eventColorOpacity: eventColorOpacity(),
     eventColors: eventColors(),
@@ -1514,6 +1519,17 @@ const [activeSection, setActiveSection] =
                 <Show when={toInt(overlayBorderWidth(), 0) > 0}>
                   <div class="setup-field-group"><h3>{t("setup.borderColor")}</h3><ColorPickerField label={t("setup.borderColor")} color={overlayBorderColor().slice(0, 7)} opacity={borderColorOpacity()} onChange={({ color, opacity }) => setOverlayBorderColor(`${color}${Math.round(opacity * 2.55).toString(16).padStart(2, "0")}`)} /></div>
                 </Show>
+                <div class="setup-field-group">
+                  <h3>{t("setup.overlayWidthMode")}</h3>
+                  <SetupSelect
+                    aria-label={t("setup.overlayWidthMode")}
+                    value={overlayWidthMode()}
+                    onChange={(e) => setOverlayWidthMode(e.currentTarget.value as "parent" | "content")}
+                  >
+                    <option value="parent">{t("setup.overlayWidthModeParent")}</option>
+                    <option value="content">{t("setup.overlayWidthModeContent")}</option>
+                  </SetupSelect>
+                </div>
                 <div class="setup-field-group"><h3>{t("setup.eventStyling")}</h3>
                   <ToggleRows rows={[{
                     label: () => t("setup.highlightTwitchEvents"),

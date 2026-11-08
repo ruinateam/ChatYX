@@ -73,6 +73,7 @@ function createForm(overrides: Partial<SetupFormState> = {}): SetupFormState {
     overlayPadding: String(DEFAULT_CHAT_CONFIG.overlayPadding),
     overlayBorderWidth: String(DEFAULT_CHAT_CONFIG.overlayBorderWidth),
     overlayBorderColor: DEFAULT_CHAT_CONFIG.overlayBorderColor,
+    overlayWidthMode: DEFAULT_CHAT_CONFIG.overlayWidthMode,
     highlightTwitchEvents: DEFAULT_CHAT_CONFIG.highlightTwitchEvents,
     eventColorOpacity: String(DEFAULT_CHAT_CONFIG.eventColorOpacity),
     eventColors: { ...DEFAULT_EVENT_COLORS },

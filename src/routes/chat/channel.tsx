@@ -137,7 +137,7 @@ export default function ChatOverlay() {
   };
 
   const overlayRootStyle = createMemo(() =>
-    createOverlayRootStyle(chatVisible()),
+    createOverlayRootStyle(chatVisible(), config()?.overlayWidthMode ?? "parent"),
   );
 
   const surfaceStyle = createMemo(() => {

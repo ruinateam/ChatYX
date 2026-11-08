@@ -70,6 +70,7 @@ export function applySetupImport(
   if (patch.overlayPadding !== undefined) setters.overlayPadding(String(patch.overlayPadding));
   if (patch.overlayBorderWidth !== undefined) setters.overlayBorderWidth(String(patch.overlayBorderWidth));
   if (patch.overlayBorderColor !== undefined) setters.overlayBorderColor(patch.overlayBorderColor);
+  if (patch.overlayWidthMode !== undefined) setters.overlayWidthMode(patch.overlayWidthMode);
   if (patch.highlightTwitchEvents !== undefined) setters.highlightTwitchEvents(patch.highlightTwitchEvents);
   if (patch.eventColorOpacity !== undefined) setters.eventColorOpacity(String(patch.eventColorOpacity));
   if (patch.eventColorDefault !== undefined) setters.eventColorDefault(patch.eventColorDefault);

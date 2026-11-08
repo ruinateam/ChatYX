@@ -83,6 +83,7 @@ export interface ChatConfig extends EventColorConfig {
   overlayPadding: number;
   overlayBorderWidth: number;
   overlayBorderColor: string;
+  overlayWidthMode: "parent" | "content";
   highlightTwitchEvents: boolean;
   eventColorOpacity: number;
   twitchEventBold: boolean;
@@ -172,6 +173,7 @@ export const DEFAULT_CHAT_CONFIG: Readonly<ChatConfig> = Object.freeze({
   overlayPadding: 10,
   overlayBorderWidth: 0,
   overlayBorderColor: "#ffffff",
+  overlayWidthMode: "parent",
   highlightTwitchEvents: true,
   eventColorOpacity: 22,
   ...DEFAULT_EVENT_COLORS,
@@ -474,6 +476,11 @@ const PARAMS: { [K in keyof ChatConfig]?: ParamDef<K> } = {
     query: "bcl",
     kind: "string",
     aliases: ["overlay_border_color"],
+  },
+  overlayWidthMode: {
+    query: "owm",
+    kind: "string",
+    aliases: ["overlay_width_mode"],
   },
   highlightTwitchEvents: {
     query: "teh",
@@ -798,6 +805,7 @@ export function isValidChatConfigImport(params: URLSearchParams): boolean {
         if (key === "platformMarker" && !["none", "stripe", "icon"].includes(raw)) return false;
         if (key === "overlayBorderColor" && !/^#?[0-9a-f]{6}(?:[0-9a-f]{2})?$/i.test(raw)) return false;
         if (key !== "overlayBorderColor" && key.endsWith("Color") && !/^#?[0-9a-f]{6}$/i.test(raw)) return false;
+        if (key === "overlayWidthMode" && !["parent", "content"].includes(raw)) return false;
       }
     }
   }

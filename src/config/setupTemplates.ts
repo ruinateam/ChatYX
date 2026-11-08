@@ -29,6 +29,7 @@ type VisualSettingKey =
   | "overlayBorderWidth"
   | "overlayBorderColor"
   | "overlayPadding"
+  | "overlayWidthMode"
   | "platformMarker"
   | "shadow"
   | "shadowColor"
@@ -103,6 +104,7 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       overlayBorderWidth: DEFAULT_CHAT_CONFIG.overlayBorderWidth,
       overlayBorderColor: DEFAULT_CHAT_CONFIG.overlayBorderColor,
       overlayPadding: DEFAULT_CHAT_CONFIG.overlayPadding,
+      overlayWidthMode: DEFAULT_CHAT_CONFIG.overlayWidthMode,
       platformMarker: DEFAULT_CHAT_CONFIG.platformMarker,
       shadow: DEFAULT_CHAT_CONFIG.shadow,
       shadowColor: DEFAULT_CHAT_CONFIG.shadowColor,
@@ -146,6 +148,7 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       overlayBorderWidth: 0,
       overlayBorderColor: "#ffffff",
       overlayPadding: 10,
+      overlayWidthMode: DEFAULT_CHAT_CONFIG.overlayWidthMode,
       platformMarker: "stripe",
       shadow: false,
       shadowColor: DEFAULT_CHAT_CONFIG.shadowColor,
@@ -199,7 +202,7 @@ export function toVisualSetupPatch<T extends Partial<Record<VisualSettingKey, un
     "removalAnimation", "fadeAnimation",
     "emoteScale", "font", "fontCustom", "fontWeight", "gifScale", "gigantifiedEmoteScale", "highlightTwitchEvents", "lineHeight", "linkColor", "linkMode", "nickFontWeight",
     "overlayBackgroundColor", "overlayBackgroundOpacity", "overlayBackgroundRadius", "overlayBorderWidth", "overlayBorderColor",
-    "overlayPadding", "platformMarker", "shadow", "shadowColor", "showChannelPointRewards", "showGifs", "showGigantifiedEmotes", "showHighlightedMessages", "showPredictions", "showPredictionsOnlyWhileActive", "size", "smallCaps", "stroke", "strokeColor",
+    "overlayPadding", "overlayWidthMode", "platformMarker", "shadow", "shadowColor", "showChannelPointRewards", "showGifs", "showGigantifiedEmotes", "showHighlightedMessages", "showPredictions", "showPredictionsOnlyWhileActive", "size", "smallCaps", "stroke", "strokeColor",
     "eventColorDefault", "eventColorFirst", "eventColorHighlight", "eventColorReward", "eventColorSubscription", "eventColorRaid", "eventColorStreak", "eventColorPowerUp", "eventColorAnnPrimary", "eventColorAnnPurple", "eventColorAnnBlue", "eventColorAnnGreen", "eventColorAnnOrange", "eventColorOpacity", "twitchEventBold", "twitchEventItalic", "usersColor",
   ];
 

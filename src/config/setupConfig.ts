@@ -89,6 +89,7 @@ export type SetupFormState = {
   overlayPadding: string;
   overlayBorderWidth: string;
   overlayBorderColor: string;
+  overlayWidthMode: "parent" | "content";
   highlightTwitchEvents: boolean;
   eventColorOpacity: string;
   eventColors: EventColorConfig;
@@ -216,6 +217,7 @@ export function buildSetupConfig(
       DEFAULT_CHAT_CONFIG.overlayBorderColor,
       true,
     ),
+    overlayWidthMode: form.overlayWidthMode,
     highlightTwitchEvents: form.highlightTwitchEvents,
     eventColorOpacity: toInt(
       form.eventColorOpacity,

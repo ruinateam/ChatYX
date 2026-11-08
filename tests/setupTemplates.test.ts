@@ -60,6 +60,7 @@ test("built-in templates keep both standard and atom presets", () => {
     overlayBorderWidth: 0,
     overlayBorderColor: "#ffffff",
     overlayPadding: 10,
+    overlayWidthMode: "parent",
     platformMarker: "stripe",
     shadow: false,
     shadowColor: "#000000",

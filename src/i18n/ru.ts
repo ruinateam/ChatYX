@@ -58,7 +58,7 @@ export const dictionary = {
     hideMessagesAfterHint: "В секундах. 0 — сообщения остаются на экране.",
     messageBackground: "Фон сообщений", backgroundRadius: "Скругление фона", padding: "Внутренний отступ",
     paddingHint: "Применяется только при скруглении фона. При 0 px чат занимает всю ширину.",
-    borderVisibility: "Видимость рамки", borderThickness: "Толщина рамки", borderColor: "Цвет рамки", twitchEventsHighlight: "Подсветка событий Twitch",
+    borderVisibility: "Видимость рамки", overlayWidthMode: "Ширина оверлея", overlayWidthModeParent: "Родитель (OBS)", overlayWidthModeContent: "Контент", borderThickness: "Толщина рамки", borderColor: "Цвет рамки", twitchEventsHighlight: "Подсветка событий Twitch",
     twitchEventsHighlightHint: "Включает фон и боковые полосы у системных событий Twitch.", eventColorsOpacity: "Прозрачность событий",
     eventColorDefault: "Обычное", eventColorFirst: "Первое", eventColorHighlight: "Выделенное", eventColorReward: "Награда", eventColorSubscription: "Подписка", eventColorRaid: "Рейд", eventColorStreak: "Серия", eventColorPowerUp: "Power-Up", eventColorAnnPrimary: "Анонс", eventColorAnnPurple: "Анонс: фиолетовый", eventColorAnnBlue: "Анонс: синий", eventColorAnnGreen: "Анонс: зелёный", eventColorAnnOrange: "Анонс: оранжевый",
     linkColor: "Цвет ссылок", linkColorHint: "Используется, когда для ссылок выбран режим выделения.",
