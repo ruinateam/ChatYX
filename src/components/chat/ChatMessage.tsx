@@ -243,15 +243,16 @@ export const ChatMessage = (props: ChatMessageProps) => {
     return ` color: ${uc};`;
   });
   const nickColor = createMemo(() => usersColor() || userColor());
+  // A uniform nickname color replaces 7TV paints, matching @mentions.
   const paintClasses = createMemo(() => {
     const css = paintCSS();
-    return css && typeof css === "object" && css.useGlobalCSS
+    return !usersColor() && css && typeof css === "object" && css.useGlobalCSS
       ? "chatyx-seventv-paint"
       : "";
   });
   const paintAttributes = createMemo(() => {
     const css = paintCSS();
-    if (css && typeof css === "object" && css.useGlobalCSS) {
+    if (!usersColor() && css && typeof css === "object" && css.useGlobalCSS) {
       const result: Record<string, string> = {};
       result["data-seventv-paint-id"] = (css as { paintId: string }).paintId;
       return result;
