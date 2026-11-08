@@ -12,7 +12,7 @@
 ### Запуск frontend
 
 ```bash
-git clone https://github.com/ruinateam/chatyx.git
+git clone https://github.com/ruinateam/ChatYX.git
 cd chatyx
 
 bun install --frozen-lockfile

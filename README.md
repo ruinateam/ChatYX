@@ -154,7 +154,7 @@ bridge можно запустить самостоятельно.
 Нужны Git и **Bun ≥ 1.3.14**:
 
 ```bash
-git clone https://github.com/ruinateam/chatyx.git
+git clone https://github.com/ruinateam/ChatYX.git
 cd chatyx
 bun install --frozen-lockfile
 bun run dev

@@ -1309,7 +1309,7 @@ const [activeSection, setActiveSection] =
               <LanguageSwitcher />
               <a
                 class="setup-report-issue"
-                href="https://github.com/Linaryx/ChatYX/issues"
+                href="https://github.com/ruinateam/ChatYX/issues"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -1318,7 +1318,7 @@ const [activeSection, setActiveSection] =
               </a>
               <a
                 class="setup-toolbar-icon-link"
-                href="https://github.com/Linaryx/ChatYX"
+                href="https://github.com/ruinateam/ChatYX"
                 target="_blank"
                 rel="noreferrer"
                 aria-label={t("toolbar.github")}
