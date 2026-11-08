@@ -1,7 +1,8 @@
-import { createMemo, For, Show, onCleanup, onMount } from "solid-js";
+import { createEffect, createMemo, For, Show, onCleanup, onMount } from "solid-js";
 import type { ChatConfig } from "~/config/chatUrlParams";
 import type { TwitchMessage, ChatPresentationService } from "~/services/chat";
 import { ChatMessage } from "~/components/chat/ChatMessage";
+import { indexMessageRows, pruneMessageIds } from "~/components/chat/messageKeys";
 import { installMessageImageFallback } from "~/utils/chat/messageImageFallback";
 import { shouldHideLinkedReward } from "~/utils/chat/linkUtils";
 
@@ -45,6 +46,11 @@ export const ChatMessageList = (props: ChatMessageListProps) => {
       !config.horizontal &&
       !config.reverseLineOrder;
     return config.reverseLineOrder || useFlowStack ? messages.reverse() : messages;
+  });
+  const indexedMessages = createMemo(() => indexMessageRows(orderedMessages()));
+  createEffect(() => {
+    pruneMessageIds(knownMessageIds, props.messages);
+    pruneMessageIds(animatedMessageIds, props.messages);
   });
 
   onMount(() => {
@@ -156,8 +162,13 @@ export const ChatMessageList = (props: ChatMessageListProps) => {
 
   return (
     <Show when={props.config && props.service}>
-      <For each={orderedMessages()}>
-        {(message) => {
+      <For each={indexedMessages().keys}>
+        {(key) => {
+          const initialMessage = indexedMessages().messages.get(key)!;
+          // Keep the last value until Solid disposes a removed row.
+          const currentMessage = createMemo<TwitchMessage>((previous) =>
+            indexedMessages().messages.get(key) ?? previous, initialMessage);
+          const message = initialMessage;
           // Refreshes replace the message object (new identity), so Solid
           // recreates the row: replaying the entry slide there would push it
           // over its neighbour, so each id animates only on first arrival.
@@ -172,7 +183,7 @@ export const ChatMessageList = (props: ChatMessageListProps) => {
           }
           return (
             <ChatMessage
-              message={message}
+              message={currentMessage()}
               config={props.config!}
               service={props.service!}
               animationDurationMs={props.animationDurationMs}
