@@ -176,6 +176,8 @@ export class LayoutManager {
   private smoothScrollFrame: number | undefined;
   private smoothScrollTarget: number | undefined;
   private smoothScrollLastTime: number | undefined;
+  private smoothScrollPosition: number | undefined;
+  private settleFrame: number | undefined;
 
   constructor(
     container: HTMLElement,
@@ -208,15 +210,28 @@ export class LayoutManager {
    * container leaves with the runtime that owned it.
    */
   cleanup(): void {
+    this.cancelSmoothScroll();
+    this.cancelSettle();
+    document
+      .querySelectorAll('style[id="chat-layout"]')
+      .forEach((element) => element.remove());
+  }
+
+  private cancelSettle(): void {
+    if (this.settleFrame !== undefined) {
+      window.cancelAnimationFrame(this.settleFrame);
+      this.settleFrame = undefined;
+    }
+  }
+
+  private cancelSmoothScroll(): void {
     if (this.smoothScrollFrame !== undefined) {
       window.cancelAnimationFrame(this.smoothScrollFrame);
       this.smoothScrollFrame = undefined;
     }
     this.smoothScrollTarget = undefined;
     this.smoothScrollLastTime = undefined;
-    document
-      .querySelectorAll('style[id="chat-layout"]')
-      .forEach((element) => element.remove());
+    this.smoothScrollPosition = undefined;
   }
 
   /**
@@ -262,6 +277,7 @@ export class LayoutManager {
     if (this.smoothScrollFrame !== undefined) return;
 
     this.smoothScrollLastTime = performance.now();
+    this.smoothScrollPosition = this.currentScroll();
     const step = (now: number) => {
       if (
         this.smoothScrollTarget === undefined ||
@@ -273,18 +289,20 @@ export class LayoutManager {
 
       const elapsed = Math.min(50, Math.max(0, now - this.smoothScrollLastTime));
       this.smoothScrollLastTime = now;
-      const current = this.currentScroll();
+      const current = this.smoothScrollPosition ?? this.currentScroll();
       const remaining = this.smoothScrollTarget - current;
       if (Math.abs(remaining) < 0.5) {
         this.setCurrentScroll(this.smoothScrollTarget);
         this.smoothScrollFrame = undefined;
         this.smoothScrollTarget = undefined;
         this.smoothScrollLastTime = undefined;
+        this.smoothScrollPosition = undefined;
         return;
       }
 
       const factor = 1 - Math.exp(-elapsed / 140);
-      this.setCurrentScroll(current + remaining * factor);
+      this.smoothScrollPosition = current + remaining * factor;
+      this.setCurrentScroll(this.smoothScrollPosition);
       this.smoothScrollFrame = window.requestAnimationFrame(step);
     };
 
@@ -306,12 +324,14 @@ export class LayoutManager {
       this.autoScroll ||
       isScrolledToEnd(this.container, scrollOptions);
     if (!shouldScroll) return;
+    this.cancelSettle();
 
     const scroll = () => {
       const target = getScrollPosition(this.container, scrollOptions);
       if (behavior === "smooth" && typeof window !== "undefined") {
         this.animateSmoothScroll(target);
       } else {
+        this.cancelSmoothScroll();
         scrollToLatest(this.container, scrollOptions, behavior);
       }
     };
@@ -319,9 +339,18 @@ export class LayoutManager {
 
     if (!settle || behavior === "smooth" || typeof window === "undefined") return;
 
-    window.requestAnimationFrame(() => {
-      scroll();
-      window.setTimeout(scroll, 60);
+    this.settleFrame = window.requestAnimationFrame(() => {
+      this.settleFrame = undefined;
+      let framesRemaining = 2;
+      const settleAfterLayout = () => {
+        if (--framesRemaining > 0) {
+          this.settleFrame = window.requestAnimationFrame(settleAfterLayout);
+          return;
+        }
+        this.settleFrame = undefined;
+        scroll();
+      };
+      this.settleFrame = window.requestAnimationFrame(settleAfterLayout);
     });
   }
 
