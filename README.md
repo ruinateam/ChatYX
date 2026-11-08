@@ -6,6 +6,22 @@
 
 **Мультиплатформенный чат-оверлей для OBS: Twitch, YouTube и Kick в одном Browser Source.**
 
+<p>
+  <img src="./public/img/platform-twitch.svg" alt="Twitch" height="28" />
+  &nbsp;&nbsp;
+  <img src="./public/img/platform-youtube.svg" alt="YouTube" height="28" />
+  &nbsp;&nbsp;
+  <img src="./public/img/platform-kick.svg" alt="Kick" height="28" />
+</p>
+
+<p>
+  <img alt="SolidJS" src="https://img.shields.io/badge/SolidJS-2C4F7C?style=for-the-badge&logo=solid&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
+  <img alt="Bun" src="https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-0F172A?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8" />
+</p>
+
 [Настроить оверлей](https://chat.ruina.team/) · [Диагностика](https://chat.ruina.team/status) · [Документация](#документация)
 
 </div>
