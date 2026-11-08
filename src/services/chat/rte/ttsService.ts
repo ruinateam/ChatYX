@@ -1,4 +1,4 @@
-const AZURE_TTS_ENDPOINT = "https://chatsemban.justdavi.dev/api/tts";
+const AZURE_TTS_ENDPOINT = "https://chat.addefan.ru:9443/api/tts";
 const CHATIS_TTS_ENDPOINT = "https://chatis.is2511.com/v2/tts/";
 const RTE_PROXY_BASE = "https://ext.rte.net.ru:8443/";
 const DEFAULT_MAX_QUEUE_SIZE = 20;
@@ -35,7 +35,7 @@ type ActiveSpeech = {
 };
 
 export function buildAzureTtsUrl(text: string, voice: string): string {
-  return `${RTE_PROXY_BASE}${AZURE_TTS_ENDPOINT}?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(voice)}`;
+  return `${AZURE_TTS_ENDPOINT}?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(voice)}`;
 }
 
 export function buildChatIsTtsUrl(): string {
