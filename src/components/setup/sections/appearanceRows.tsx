@@ -4,6 +4,7 @@ import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import type { LocalFontOption } from "~/services/setup/localFonts";
+import { FONTS } from "~/styles/chatStyles";
 import { SetupNumberField } from "../SetupNumberField";
 import { SetupSelect } from "../SetupSelect";
 import type { ControlRow } from "../SetupLayout";
@@ -87,27 +88,38 @@ export function createAppearanceRows(source: AppearanceRowsSource): ControlRow[]
     {
       label: () => t("setup.font"),
       control: (labelId) => (
-        <SetupSelect
-          aria-labelledby={labelId}
-          value={font()}
-          onChange={(e) => setFont(e.currentTarget.value)}
-        >
-          <option value="0">{t("setup.customFont")}</option>
-          <option value="1">Baloo Tammudu</option>
-          <option value="2">Segoe UI (Chatterino)</option>
-          <option value="3">Roboto</option>
-          <option value="4">Lato</option>
-          <option value="5">Noto Sans</option>
-          <option value="6">Source Code Pro</option>
-          <option value="7">Impact</option>
-          <option value="8">Comfortaa</option>
-          <option value="9">Dancing Script</option>
-          <option value="10">Indie Flower</option>
-          <option value="11">Open Sans</option>
-          <option value="12">Alsina (Vsauce)</option>
-          <option value="13">BF Mono</option>
-          <option value="14">Monocraft</option>
-        </SetupSelect>
+        <div class="flex items-center gap-2">
+          <Show when={font() !== "0"}>
+            <span
+              aria-hidden="true"
+              class="inline-flex h-10 shrink-0 items-center rounded-md border border-input bg-background px-2.5 text-base text-foreground"
+              style={{ "font-family": FONTS[Number(font()) - 1] }}
+            >
+              Aa
+            </span>
+          </Show>
+          <SetupSelect
+            aria-labelledby={labelId}
+            value={font()}
+            onChange={(e) => setFont(e.currentTarget.value)}
+          >
+            <option value="0">{t("setup.customFont")}</option>
+            <option value="1">Baloo Tammudu</option>
+            <option value="2">Segoe UI (Chatterino)</option>
+            <option value="3">Roboto</option>
+            <option value="4">Lato</option>
+            <option value="5">Noto Sans</option>
+            <option value="6">Source Code Pro</option>
+            <option value="7">Impact</option>
+            <option value="8">Comfortaa</option>
+            <option value="9">Dancing Script</option>
+            <option value="10">Indie Flower</option>
+            <option value="11">Open Sans</option>
+            <option value="12">Alsina (Vsauce)</option>
+            <option value="13">BF Mono</option>
+            <option value="14">Monocraft</option>
+          </SetupSelect>
+        </div>
       ),
     },
     {
