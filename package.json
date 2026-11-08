@@ -24,27 +24,27 @@
     "check": "bun run lint && bun run typecheck && bun run test && bun run test:services && bun run build"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.4.1",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^26.6.6",
     "csstype": "^3.2.3",
-    "oxlint": "^1.81.0",
-    "tailwindcss": "^4.3.3",
+    "oxlint": "^1.92.0",
+    "tailwindcss": "^4.3.5",
     "typescript": "^7.0.2",
-    "vite": "^8.2.2",
-    "vite-plugin-solid": "^2.11.14"
+    "vite": "^8.3.6",
+    "vite-plugin-solid": "^2.11.15"
   },
   "dependencies": {
-    "@hugeicons/core-free-icons": "^4.3.5",
+    "@hugeicons/core-free-icons": "^4.4.0",
     "@hugeicons/solid-js": "^1.0.0",
-    "@kobalte/core": "^0.13.13",
+    "@kobalte/core": "^0.13.14",
     "@solid-primitives/i18n": "^2.2.1",
-    "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^1.0.0",
-    "@zumer/snapdom": "^3.3.0",
+    "@solidjs/meta": "^0.29.8",
+    "@solidjs/router": "^1.0.1",
+    "@zumer/snapdom": "^3.7.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "solid-js": "^1.9.15",
-    "tailwind-merge": "^3.6.0",
+    "solid-js": "^1.9.18",
+    "tailwind-merge": "^3.7.0",
     "vanilla-disintegrate": "^1.6.1"
   },
   "engines": {

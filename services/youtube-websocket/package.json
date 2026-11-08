@@ -11,10 +11,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "youtubei.js": "^18.0.0"
+    "youtubei.js": "^18.3.0"
   },
   "devDependencies": {
-    "@types/bun": "^1.4.1",
+    "@types/bun": "^1.4.4",
     "typescript": "^7.0.2"
   },
   "engines": {
