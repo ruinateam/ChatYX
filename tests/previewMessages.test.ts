@@ -26,6 +26,12 @@ describe("chat preview messages", () => {
     const messages = createPreviewMessages("channel", service, "0", "pasta", 24);
     expect(new Set(messages.map((message) => message.username)).size).toBeLessThan(messages.length);
   });
+  test("synthetic demo authors come from the viewer allowlist when one is set", () => {
+    resetUserPool();
+    const allowed = ["alice", "bob"];
+    const messages = createPreviewMessages("channel", service, "0", "pasta", 12, false, allowed);
+    expect(messages.every((message) => allowed.includes(message.username))).toBe(true);
+  });
   test("does not attach replies to rewards, raids, or announcements", () => {
     resetUserPool();
     const messages = createPreviewMessages("channel", service, "0", "pasta", 13);

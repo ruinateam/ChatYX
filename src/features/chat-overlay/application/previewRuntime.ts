@@ -21,7 +21,7 @@ import {
   hasMessageEntryAnimation,
   messageSpeedToIntervalMs,
 } from "~/config/chatAnimation";
-import type { ChatConfig } from "~/config/chatUrlParams";
+import { parseBotNames, type ChatConfig } from "~/config/chatUrlParams";
 import type { ChatRuntimeHooks } from "./runtimeHooks";
 import type { TwitchMessage } from "~/services/chat/twitch/twitchService";
 import { selectPreviewModeration } from "../model/previewModeration";
@@ -112,6 +112,7 @@ export class PreviewRuntime {
   private connectionGeneration = 0;
   private nextModerationAt = 0;
   private moderationInProgress = false;
+  private allowedChatters = new Set<string>();
   private readonly mutedUntil = new Map<string, number>();
   /**
    * Set by `initialize()`, which is what claims the shared proxy flag and fills
@@ -241,6 +242,10 @@ export class PreviewRuntime {
       );
     }
 
+    this.allowedChatters = new Set(
+      parseBotNames(this.config.singleChatter),
+    );
+
     if (speedChanged) this.restartMessageInterval();
   }
 
@@ -298,7 +303,8 @@ export class PreviewRuntime {
       this.options.demoKind,
       6,
       this.config.showGifs,
-    );
+      parseBotNames(this.config.singleChatter),
+    ).filter((message) => this.isDisplayed(message));
     messages.forEach((message) => mentionStyleService.registerMessageAuthor(message));
     this.hooks.onMessagesChange(() => messages);
     this.service.scrollToLatest(
@@ -319,12 +325,16 @@ export class PreviewRuntime {
       this.channelId,
       this.options.demoKind,
       this.config.showGifs,
+      parseBotNames(this.config.singleChatter),
     );
     const now = Date.now();
     for (const [username, until] of this.mutedUntil) {
       if (until <= now) this.mutedUntil.delete(username);
     }
-    if (this.mutedUntil.has(message.username.toLowerCase())) {
+    if (
+      this.mutedUntil.has(message.username.toLowerCase()) ||
+      !this.isDisplayed(message)
+    ) {
       this.maybeModerate(now);
       return;
     }
@@ -337,6 +347,16 @@ export class PreviewRuntime {
       getAnimationScrollBehavior(this.config.animation),
     );
     this.maybeModerate(now);
+  }
+
+  private isDisplayed(message: TwitchMessage): boolean {
+    return (
+      this.service?.shouldDisplayMessage(
+        message.username,
+        message.message,
+        message.platform,
+      ) ?? false
+    );
   }
 
   private maybeModerate(now: number) {

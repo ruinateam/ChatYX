@@ -69,6 +69,7 @@ function createHarness(hooks: Partial<PreviewRuntimeHooks> = {}) {
       cancelMessageRemovals: () => calls.push("service.cancel-removals"),
       getConfig: () => ({ animation: { duration: 0 } }),
       scrollToLatest: () => {},
+      shouldDisplayMessage: () => true,
       initializeLayout: () => {},
     }) as never,
     setProxyEnabled: (enabled) => calls.push(`proxy:${enabled}`),

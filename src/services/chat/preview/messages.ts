@@ -195,6 +195,7 @@ export function nextPreviewMessage(
   channelId: string,
   demoKind: PreviewDemoKind = "pasta",
   showGifs = false,
+  allowedNames: readonly string[] = [],
 ): TwitchMessage {
   const index = messageCounter++;
 
@@ -226,7 +227,9 @@ export function nextPreviewMessage(
     const base =
       PREVIEW_USERNAME_BASES[Math.floor(previewRandom(identityIndex + 900) * baseLen)];
     const num = Math.floor(previewRandom(identityIndex + 800) * 999999);
-    username = `${base}${num}`;
+    username = allowedNames.length > 0
+      ? allowedNames[identityIndex % allowedNames.length]
+      : `${base}${num}`;
     displayName = username;
     isBroadcaster = index > 0 && previewRandom(index + 100) < 0.08;
     isModerator = !isBroadcaster && previewRandom(index + 200) < 0.18;
@@ -354,10 +357,11 @@ export function createPreviewMessages(
   demoKind: PreviewDemoKind = "pasta",
   count = 6,
   showGifs = false,
+  allowedNames: readonly string[] = [],
 ): TwitchMessage[] {
   resetMessageState();
   return Array.from({ length: count }, () =>
-    nextPreviewMessage(channel, service, channelId, demoKind, showGifs),
+    nextPreviewMessage(channel, service, channelId, demoKind, showGifs, allowedNames),
   ).map((msg, i, list) => ({
     ...msg,
     id: `preview-${i + 1}`,
