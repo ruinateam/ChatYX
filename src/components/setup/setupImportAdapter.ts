@@ -93,6 +93,8 @@ export function applySetupImport(
   if (patch.linkMode !== undefined) setters.linkMode(patch.linkMode);
   if (patch.linkColor !== undefined) setters.linkColor(patch.linkColor);
   if (patch.usersColor !== undefined) setters.usersColor(patch.usersColor);
+  if (patch.readableColorsMode !== undefined) setters.readableColorsMode(patch.readableColorsMode);
+  if (patch.readableColorsContrast !== undefined) setters.readableColorsContrast(String(patch.readableColorsContrast));
   if (patch.hideLinkRewards !== undefined) setters.hideLinkRewards(patch.hideLinkRewards);
   if (patch.rteProxy !== undefined) setters.rteProxy(patch.rteProxy);
   if (patch.rteAzureTts !== undefined) setters.rteAzureTts(patch.rteAzureTts);

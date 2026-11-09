@@ -1,5 +1,6 @@
 import type { JSX } from "solid-js";
 import type { ChatConfig } from "~/config/chatUrlParams";
+import { resolveReadableNickColor } from "~/config/readableColors";
 import type { TwitchMessage, ChatPresentationService } from "~/services/chat";
 import { bitsService } from "~/services/chat";
 import { mentionStyleService } from "~/services/chat";
@@ -117,6 +118,7 @@ const CSS_COLOR_PATTERN =
 function renderMentionHtml(
   token: string,
   service: ChatPresentationService,
+  config: ChatConfig,
   uniformColor?: string,
 ): string | null {
   const mentionStyle = mentionStyleService.resolveMention(
@@ -137,9 +139,16 @@ function renderMentionHtml(
       return `<span class="mention" style="${safeCss}">${escapedText}</span>${escapedSuffix}`;
     }
     case "color": {
-      const safeColor = CSS_COLOR_PATTERN.test(mentionStyle.color)
+      // The uniform nickname colour is an explicit choice, so it is never
+      // adjusted; per-user mention colours follow the readable colour mode.
+      const color = uniformColor
         ? mentionStyle.color
-        : "#ffffff";
+        : resolveReadableNickColor(config, mentionStyle.color);
+      const safeColor = color
+        ? CSS_COLOR_PATTERN.test(color)
+          ? color
+          : "#ffffff"
+        : "inherit";
       return `<span class="mention" style="color: ${safeColor};">${escapedText}</span>${escapedSuffix}`;
     }
   }
@@ -386,6 +395,7 @@ export function renderMessageWithEmotes(
     const mentionHtml = renderMentionHtml(
       restoredText,
       service,
+      config,
       uniformNickColor,
     );
     if (mentionHtml) {

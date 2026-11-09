@@ -18,6 +18,7 @@ import { getFontFamily } from "~/styles/chatStyles";
 import { getChatEventStyleVariables } from "~/styles/chatEventStyles";
 import { networkClient } from "~/services/network/networkClient";
 import { hasMessageEntryAnimation } from "~/config/chatAnimation";
+import { resolveReadableNickColor } from "~/config/readableColors";
 import { ChatBadges } from "~/components/chat/ChatBadges";
 import { ChatNick } from "~/components/chat/ChatNick";
 import { ChatText } from "~/components/chat/ChatText";
@@ -167,7 +168,10 @@ export const ChatMessage = (props: ChatMessageProps) => {
       sevenTVCosmeticsService.calculatePaintCSS(props.message.username),
   );
   const userColor = createMemo(() =>
-    safeCssColor(props.message.color || "#e6eef7"),
+    resolveReadableNickColor(
+      props.config,
+      safeCssColor(props.message.color || "#e6eef7"),
+    ),
   );
   const usersColor = createMemo(() =>
     props.config.usersColor ? safeCssColor(props.config.usersColor, "") : "",
@@ -240,7 +244,8 @@ export const ChatMessage = (props: ChatMessageProps) => {
     const uc = userColor();
     if (css && typeof css === "object" && css.useGlobalCSS) return "";
     if (ip) return ` ${ip}`;
-    return ` color: ${uc};`;
+    // "No color" leaves the nickname to inherit the overlay text colour.
+    return uc ? ` color: ${uc};` : "";
   });
   const nickColor = createMemo(() => usersColor() || userColor());
   // A uniform nickname color replaces 7TV paints, matching @mentions.

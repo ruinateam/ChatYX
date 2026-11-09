@@ -15,8 +15,17 @@ import {
   type MessageRemovalMode,
   type ChatAnimationMode,
 } from "./chatAnimation";
+import {
+  DEFAULT_READABLE_COLOR_CONTRAST,
+  DEFAULT_READABLE_COLOR_MODE,
+  isReadableColorMode,
+  normalizeReadableColorContrast,
+  normalizeReadableColorMode,
+  type ReadableColorMode,
+} from "../utils/readableColor";
 
 export type { ChatAnimationMode } from "./chatAnimation";
+export type { ReadableColorMode } from "../utils/readableColor";
 
 export type LinkDisplayMode = "normal" | "hide" | "highlight";
 export type PlatformMarkerMode = "none" | "stripe" | "icon";
@@ -96,6 +105,8 @@ export interface ChatConfig extends EventColorConfig {
   linkMode: LinkDisplayMode;
   linkColor: string;
   usersColor: string;
+  readableColorsMode: ReadableColorMode;
+  readableColorsContrast: number;
   hideLinkRewards: boolean;
   rteProxy: boolean;
   rteAzureTts: boolean;
@@ -187,6 +198,8 @@ export const DEFAULT_CHAT_CONFIG: Readonly<ChatConfig> = Object.freeze({
   linkMode: "normal",
   linkColor: "#53b7ff",
   usersColor: "",
+  readableColorsMode: DEFAULT_READABLE_COLOR_MODE,
+  readableColorsContrast: DEFAULT_READABLE_COLOR_CONTRAST,
   hideLinkRewards: true,
   rteProxy: false,
   rteAzureTts: false,
@@ -537,6 +550,16 @@ const PARAMS: { [K in keyof ChatConfig]?: ParamDef<K> } = {
     kind: "string",
     aliases: ["users_color", "usersColor"],
   },
+  readableColorsMode: {
+    query: "rcm",
+    kind: "string",
+    aliases: ["readable_colors_mode"],
+  },
+  readableColorsContrast: {
+    query: "rcc",
+    kind: "float",
+    aliases: ["readable_colors_contrast"],
+  },
   hideLinkRewards: {
     query: "hidelinkrewards",
     kind: "bool",
@@ -806,6 +829,7 @@ export function isValidChatConfigImport(params: URLSearchParams): boolean {
         if (key === "overlayBorderColor" && !/^#?[0-9a-f]{6}(?:[0-9a-f]{2})?$/i.test(raw)) return false;
         if (key !== "overlayBorderColor" && key.endsWith("Color") && !/^#?[0-9a-f]{6}$/i.test(raw)) return false;
         if (key === "overlayWidthMode" && !["parent", "content"].includes(raw)) return false;
+        if (key === "readableColorsMode" && !isReadableColorMode(raw)) return false;
       }
     }
   }
@@ -1092,6 +1116,10 @@ export function parseChatConfigFromSearchParams(
   if (!["none", "stripe", "icon"].includes(cfg.platformMarker)) {
     cfg.platformMarker = DEFAULT_CHAT_CONFIG.platformMarker;
   }
+  cfg.readableColorsMode = normalizeReadableColorMode(cfg.readableColorsMode);
+  cfg.readableColorsContrast = normalizeReadableColorContrast(
+    cfg.readableColorsContrast,
+  );
 
   return cfg;
 }

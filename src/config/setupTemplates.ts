@@ -59,7 +59,9 @@ type VisualSettingKey =
   | "eventColorOpacity"
   | "twitchEventBold"
   | "twitchEventItalic"
-  | "usersColor";
+  | "usersColor"
+  | "readableColorsMode"
+  | "readableColorsContrast";
 
 export type VisualSetupPatch = Pick<SetupImportPatch, VisualSettingKey>;
 
@@ -123,6 +125,8 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       twitchEventBold: DEFAULT_CHAT_CONFIG.twitchEventBold,
       twitchEventItalic: DEFAULT_CHAT_CONFIG.twitchEventItalic,
       usersColor: DEFAULT_CHAT_CONFIG.usersColor,
+      readableColorsMode: DEFAULT_CHAT_CONFIG.readableColorsMode,
+      readableColorsContrast: DEFAULT_CHAT_CONFIG.readableColorsContrast,
     },
   },
   {
@@ -167,6 +171,8 @@ export const BUILT_IN_SETUP_TEMPLATES: readonly BuiltInSetupTemplate[] = [
       twitchEventBold: false,
       twitchEventItalic: false,
       usersColor: "#BD1313",
+      readableColorsMode: DEFAULT_CHAT_CONFIG.readableColorsMode,
+      readableColorsContrast: DEFAULT_CHAT_CONFIG.readableColorsContrast,
     },
   },
 ];
@@ -204,6 +210,7 @@ export function toVisualSetupPatch<T extends Partial<Record<VisualSettingKey, un
     "overlayBackgroundColor", "overlayBackgroundOpacity", "overlayBackgroundRadius", "overlayBorderWidth", "overlayBorderColor",
     "overlayPadding", "overlayWidthMode", "platformMarker", "shadow", "shadowColor", "showChannelPointRewards", "showGifs", "showGigantifiedEmotes", "showHighlightedMessages", "showPredictions", "showPredictionsOnlyWhileActive", "size", "smallCaps", "stroke", "strokeColor",
     "eventColorDefault", "eventColorFirst", "eventColorHighlight", "eventColorReward", "eventColorSubscription", "eventColorRaid", "eventColorStreak", "eventColorPowerUp", "eventColorAnnPrimary", "eventColorAnnPurple", "eventColorAnnBlue", "eventColorAnnGreen", "eventColorAnnOrange", "eventColorOpacity", "twitchEventBold", "twitchEventItalic", "usersColor",
+    "readableColorsMode", "readableColorsContrast",
   ];
 
   return Object.fromEntries(

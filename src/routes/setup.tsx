@@ -30,6 +30,7 @@ import { UserChip } from "~/components/setup/UserChip";
 import { FfzBadgeMergeBlock } from "~/components/setup/FfzBadgeMergeBlock";
 import { PreviewControls } from "~/components/setup/PreviewControls";
 import { createAppearanceRows } from "~/components/setup/sections/appearanceRows";
+import { createReadableColorRows } from "~/components/setup/sections/readableColorRows";
 import { createStylingRows } from "~/components/setup/sections/stylingRows";
 import {
   createBehaviorRows,
@@ -85,6 +86,7 @@ import {
   type ChatAnimationMode,
   type LinkDisplayMode,
   type PlatformMarkerMode,
+  type ReadableColorMode,
 } from "~/config/chatUrlParams";
 import { getPublicAssetUrl } from "~/utils/appBase";
 import {
@@ -421,6 +423,11 @@ export default function ChatSetup() {
   const [linkColor, setLinkColor] = createSignal(DEFAULT_CHAT_CONFIG.linkColor);
   const [usersColorEnabled, setUsersColorEnabled] = createSignal(false);
   const [usersColor, setUsersColor] = createSignal("#ffffff");
+  const [readableColorsMode, setReadableColorsMode] =
+    createSignal<ReadableColorMode>(DEFAULT_CHAT_CONFIG.readableColorsMode);
+  const [readableColorsContrast, setReadableColorsContrast] = createSignal(
+    String(DEFAULT_CHAT_CONFIG.readableColorsContrast),
+  );
   const [hideLinkRewards, setHideLinkRewards] = createSignal(
     DEFAULT_CHAT_CONFIG.hideLinkRewards,
   );
@@ -592,6 +599,8 @@ const [activeSection, setActiveSection] =
       linkMode: setLinkMode,
       linkColor: setLinkColor,
       usersColor: setUsersColor,
+      readableColorsMode: setReadableColorsMode,
+      readableColorsContrast: (value) => setReadableColorsContrast(String(value)),
       hideLinkRewards: setHideLinkRewards,
       rteProxy: setRteProxy,
       rteAzureTts: setRteAzureTts,
@@ -700,6 +709,8 @@ const [activeSection, setActiveSection] =
     linkColor: linkColor(),
     usersColorEnabled: usersColorEnabled(),
     usersColor: usersColor(),
+    readableColorsMode: readableColorsMode(),
+    readableColorsContrast: readableColorsContrast(),
     hideLinkRewards: hideLinkRewards(),
     rteProxy: rteProxy(),
     rteAzureTts: rteAzureTts(),
@@ -1095,6 +1106,13 @@ const [activeSection, setActiveSection] =
     setOverlayPadding,
     overlayBorderWidth,
     setOverlayBorderWidth,
+  });
+
+  const readableColorRows = createReadableColorRows({
+    mode: readableColorsMode,
+    setMode: setReadableColorsMode,
+    contrast: readableColorsContrast,
+    setContrast: setReadableColorsContrast,
   });
 
   const linkColorRow: ControlRow = {
@@ -1562,6 +1580,10 @@ const [activeSection, setActiveSection] =
                       <ColorPickerField label={t("setup.nicknameColor")} color={usersColor()} opacity={100} showOpacity={false} onChange={({ color }) => setUsersColor(color)} />
                     </div>
                   </Show>
+                </div>
+                <div class="setup-field-group">
+                  <h3>{t("setup.readableColors")}</h3>
+                  <ControlRows rows={readableColorRows} />
                 </div>
               </SectionCard>
 

@@ -20,8 +20,10 @@ import {
   type ChatConfig,
   type LinkDisplayMode,
   type PlatformMarkerMode,
+  type ReadableColorMode,
 } from "./chatUrlParams";
 import type { EventColorConfig } from "./eventColors";
+import { normalizeReadableColorContrast } from "../utils/readableColor";
 import {
   normalizeHexColor,
   toClampedInt,
@@ -104,6 +106,8 @@ export type SetupFormState = {
   linkColor: string;
   usersColorEnabled: boolean;
   usersColor: string;
+  readableColorsMode: ReadableColorMode;
+  readableColorsContrast: string;
   hideLinkRewards: boolean;
   rteProxy: boolean;
   rteAzureTts: boolean;
@@ -236,6 +240,10 @@ export function buildSetupConfig(
     usersColor: form.usersColorEnabled
       ? normalizeHexColor(form.usersColor, "#ffffff")
       : "",
+    readableColorsMode: form.readableColorsMode,
+    readableColorsContrast: normalizeReadableColorContrast(
+      toFloat(form.readableColorsContrast, DEFAULT_CHAT_CONFIG.readableColorsContrast),
+    ),
     hideLinkRewards: form.hideLinkRewards,
     rteProxy: form.rteProxy,
     rteAzureTts: form.rteAzureTts,

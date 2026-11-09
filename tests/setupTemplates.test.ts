@@ -79,6 +79,8 @@ test("built-in templates keep both standard and atom presets", () => {
     twitchEventBold: false,
     twitchEventItalic: false,
     usersColor: "#BD1313",
+    readableColorsMode: DEFAULT_CHAT_CONFIG.readableColorsMode,
+    readableColorsContrast: DEFAULT_CHAT_CONFIG.readableColorsContrast,
   });
   expect(atom?.settings).not.toHaveProperty("channel");
 });

@@ -171,6 +171,26 @@ describe("chat URL params", () => {
     expect(parseChatConfigFromSearchParams(params)).toEqual(cfg);
   });
 
+  test("round-trips readable colour adjustment and clamps its contrast", () => {
+    const cfg: ChatConfig = {
+      ...DEFAULT_CHAT_CONFIG,
+      channel: "xqc",
+      readableColorsMode: "hsl-luma",
+      readableColorsContrast: 7.5,
+    };
+
+    const params = chatConfigToSearchParams(cfg);
+    expect(params.get("rcm")).toBe("hsl-luma");
+    expect(params.get("rcc")).toBe("7.5");
+    expect(parseChatConfigFromSearchParams(params)).toEqual(cfg);
+
+    const fallback = parseChatConfigFromSearchParams(
+      new URLSearchParams("rcm=bogus&rcc=100"),
+    );
+    expect(fallback.readableColorsMode).toBe("unchanged");
+    expect(fallback.readableColorsContrast).toBe(21);
+  });
+
   test("omits the default event palette and reads legacy event colors", () => {
     expect(chatConfigToSearchParams(DEFAULT_CHAT_CONFIG).get("evc")).toBeNull();
 

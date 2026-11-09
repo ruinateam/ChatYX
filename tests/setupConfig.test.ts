@@ -88,6 +88,8 @@ function createForm(overrides: Partial<SetupFormState> = {}): SetupFormState {
     linkColor: DEFAULT_CHAT_CONFIG.linkColor,
     usersColorEnabled: false,
     usersColor: "#ffffff",
+    readableColorsMode: DEFAULT_CHAT_CONFIG.readableColorsMode,
+    readableColorsContrast: String(DEFAULT_CHAT_CONFIG.readableColorsContrast),
     hideLinkRewards: DEFAULT_CHAT_CONFIG.hideLinkRewards,
     rteProxy: DEFAULT_CHAT_CONFIG.rteProxy,
     rteAzureTts: DEFAULT_CHAT_CONFIG.rteAzureTts,
@@ -122,6 +124,17 @@ test("overlay width mode round-trips from setup through the overlay URL", () => 
   const url = new URL(buildOverlayUrl(config, undefined, { baseUrl: "https://example.com" }));
   const parsed = parseChatConfigFromSearchParams(url.searchParams);
   expect(parsed.overlayWidthMode).toBe("content");
+});
+
+test("readable colour settings round-trip from setup through the overlay URL", () => {
+  const config = buildSetupConfig(
+    createForm({ readableColorsMode: "luv-luma", readableColorsContrast: "7.5" }),
+    "streamer",
+  );
+  const url = new URL(buildOverlayUrl(config, undefined, { baseUrl: "https://example.com" }));
+  const parsed = parseChatConfigFromSearchParams(url.searchParams);
+  expect(parsed.readableColorsMode).toBe("luv-luma");
+  expect(parsed.readableColorsContrast).toBe(7.5);
 });
 
 test("buildSetupConfig trims and de-channels the secondary platforms", () => {
