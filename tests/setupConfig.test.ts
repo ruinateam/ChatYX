@@ -114,6 +114,16 @@ test("removal animation and lifetime animation independently round-trip from set
   expect(parsed.fade).toBe(15);
 });
 
+test("overlay width mode round-trips from setup through the overlay URL", () => {
+  const config = buildSetupConfig(
+    createForm({ overlayWidthMode: "content" }),
+    "streamer",
+  );
+  const url = new URL(buildOverlayUrl(config, undefined, { baseUrl: "https://example.com" }));
+  const parsed = parseChatConfigFromSearchParams(url.searchParams);
+  expect(parsed.overlayWidthMode).toBe("content");
+});
+
 test("buildSetupConfig trims and de-channels the secondary platforms", () => {
   const config = buildSetupConfig(
     createForm({ youtubeChannel: "  @SomeYouTube  ", kickChannel: "@SomeKick" }),

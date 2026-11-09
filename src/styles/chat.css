@@ -64,9 +64,10 @@ body {
   --chat-event-muted: rgba(255, 255, 255, 0.72);
   --chat-event-separator-color: rgba(255, 255, 255, 0.48);
   width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
   padding: 0;
-  position: absolute;
-  bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: transparent;

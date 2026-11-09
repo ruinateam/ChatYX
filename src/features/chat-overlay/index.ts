@@ -6,6 +6,12 @@ export {
   type ChatOverlayMode,
 } from "./application/chatOverlayApplication";
 export { createChatOverlayApplication } from "./application/compositionRoot";
+export {
+  bindContentWidth,
+  CONTENT_WIDTH_PROPERTY,
+  type ContentWidthBinding,
+  type ContentWidthBindingOptions,
+} from "./application/contentWidthBinding";
 export type { ChatCommandStatus } from "./application/runtimeHooks";
 export {
   createChromeStyle,
@@ -13,5 +19,7 @@ export {
   createLoadingBackground,
   createOverlayRootStyle,
   createSurfaceStyle,
+  measureContentWidth,
+  type OverlayWidthMode,
 } from "./model/overlayStyles";
 export { shouldShowPrediction } from "./model/predictionVisibility";

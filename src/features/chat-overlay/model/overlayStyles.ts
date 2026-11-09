@@ -13,11 +13,16 @@ function hexToRgb(hex: string): string {
   return `${r}, ${g}, ${b}`;
 }
 
-export function createOverlayRootStyle(visible: boolean, widthMode: "parent" | "content" = "parent") {
+export function createOverlayRootStyle(
+  visible: boolean,
+  widthMode: OverlayWidthMode = "parent",
+) {
   return {
     position: "absolute",
     inset: "0",
-    width: widthMode === "content" ? "fit-content" : "100%",
+    // The root always fills its parent: it is the measuring basis for content
+    // width, so shrinking it would feed the measurement back into itself.
+    width: "100%",
     height: "100%",
     "max-height": "100vh",
     display: "flex",
@@ -32,7 +37,11 @@ export function createOverlayRootStyle(visible: boolean, widthMode: "parent" | "
   } as const;
 }
 
-export function createSurfaceStyle(config: ChatConfig, fadeDurationMs: number) {
+export function createSurfaceStyle(
+  config: ChatConfig,
+  fadeDurationMs: number,
+  widthMode: OverlayWidthMode = "parent",
+) {
   const backgroundOpacity = clamp(config.overlayBackgroundOpacity, 0, 100) / 100;
   const borderWidth = clamp(config.overlayBorderWidth, 0, 8);
   const borderRadius = clamp(config.overlayBackgroundRadius, 0, 128);
@@ -40,11 +49,13 @@ export function createSurfaceStyle(config: ChatConfig, fadeDurationMs: number) {
 
   return {
     position: "relative",
-    width: "100%",
+    // Content mode keeps the measured width; `100%` is the measuring state and
+    // the cold-start fallback before the first measurement lands.
+    width: widthMode === "content" ? "var(--chat-content-width, 100%)" : "100%",
     height: "100%",
     display: "flex",
     "flex-direction": "column",
-    "align-items": "stretch",
+    "align-items": widthMode === "content" ? "flex-start" : "stretch",
     "justify-content":
       config.reverseLineOrder && !config.horizontal ? "flex-start" : "flex-end",
     padding: `${padding}px`,
@@ -83,9 +94,30 @@ export function createLoadingBackground(config: ChatConfig) {
   return `rgba(${hexToRgb(config.overlayBackgroundColor)}, ${opacity})`;
 }
 
+export type OverlayWidthMode = "parent" | "content";
+
+/**
+ * Width of the widest rendered row, capped by the container so a long message
+ * still wraps instead of pushing the overlay past its parent. Rows are
+ * `fit-content` boxes, so per-row widths are the visual content widths; the
+ * cap keeps the first measurement (taken at full parent width) authoritative.
+ */
+export function measureContentWidth(
+  rows: readonly HTMLElement[],
+  availableWidth: number,
+): number {
+  let widest = 0;
+  for (const row of rows) widest = Math.max(widest, row.getBoundingClientRect().width);
+  const available = Math.max(0, availableWidth);
+  return Math.min(Math.max(0, widest), available);
+}
+
 export function createContainerStyle() {
   return {
     position: "relative",
+    // The container always spans its parent so messages wrap at the parent
+    // width. In content mode the surface is measured and narrowed, then this
+    // 100% follows that width.
     width: "100%",
     "max-width": "100%",
     "max-height": "100%",

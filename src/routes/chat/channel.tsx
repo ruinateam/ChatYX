@@ -1,4 +1,5 @@
 import {
+  createEffect,
   createMemo,
   createSignal,
   onCleanup,
@@ -22,8 +23,9 @@ import type { ChatConfig } from "~/config/chatUrlParams";
 import type { PreviewDemoKind } from "~/services/chat/preview";
 import { DEFAULT_ANIMATION_OPTIONS } from "~/config/chatAnimation";
 import {
-  createChatOverlayApplication,
+  bindContentWidth,
   type ChatCommandStatus,
+  createChatOverlayApplication,
   createChromeStyle,
   createContainerStyle,
   createLoadingBackground,
@@ -143,7 +145,8 @@ export default function ChatOverlay() {
   const surfaceStyle = createMemo(() => {
     const cfg = config() ?? runtimeConfig;
     const fadeDurationMs = chatService()?.getConfig().fade.fadeOutDuration ?? 1000;
-    return createSurfaceStyle(cfg, fadeDurationMs);
+    const widthMode = cfg.overlayWidthMode;
+    return createSurfaceStyle(cfg, fadeDurationMs, widthMode);
   });
 
   const chromeStyle = createChromeStyle();
@@ -155,7 +158,25 @@ export default function ChatOverlay() {
   const containerStyle = createContainerStyle();
 
   let debugCommands: Window["chatyxDebug"];
+  let contentWidth: ReturnType<typeof bindContentWidth> | undefined;
+  // The runtime config is the fallback the styles use before the service
+  // resolves, so the binding must read the mode from the same source.
+  const isContentWidth = () =>
+    (config() ?? runtimeConfig).overlayWidthMode === "content";
+
   onMount(() => {
+    const root = document.getElementById("chat_overlay_root");
+    const surface = document.getElementById("chat_surface");
+    const container = document.getElementById("chat_container");
+    if (root && surface && container) {
+      contentWidth = bindContentWidth({
+        root,
+        surface,
+        container,
+        isEnabled: isContentWidth,
+      });
+    }
+
     if (!application) {
       // Channel parameter required — URL will show error state;
       return;
@@ -180,10 +201,17 @@ export default function ChatOverlay() {
     }
   });
 
+  createEffect(() => {
+    // Re-measure on a mode switch; the binding parks its property in parent mode.
+    isContentWidth();
+    contentWidth?.refresh();
+  });
+
   onCleanup(() => {
     if (debugCommands && window.chatyxDebug === debugCommands) {
       delete window.chatyxDebug;
     }
+    contentWidth?.destroy();
     application?.destroy();
   });
 
