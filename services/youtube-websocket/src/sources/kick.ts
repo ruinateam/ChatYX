@@ -143,6 +143,7 @@ function parseReply(metadata: unknown) {
 }
 
 export function normalizeKickMessage(value: unknown): ChatSourceMessage | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const message = value as KickMessage;
   const id = asString(message.id);
   const author = normalizeSender(message.sender);
@@ -305,10 +306,12 @@ export class KickSourceWorker implements ChatSourceWorker {
     this.listener = listener;
     this.stopped = false;
     const channel = await resolveKickChannel(this.slug);
+    if (this.stopped) return;
     this.channelId = channel.channelId;
     this.chatroomId = channel.chatroomId;
     try {
       const messages = await fetchKickHistory(this.channelId);
+      if (this.stopped) return;
       if (messages.length > 0) {
         listener({ type: "history", platform: "kick", messages });
       }

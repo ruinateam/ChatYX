@@ -5,6 +5,14 @@ export type SourceRoute =
   | { platform: "youtube"; mode: YouTubeSourceMode; id: string }
   | { platform: "kick"; id: string };
 
+export function sourceKey(route: SourceRoute): string {
+  if (route.platform === "kick") return `kick:${route.id.toLowerCase()}`;
+  const id = route.mode === "stream" || YOUTUBE_CHANNEL_ID_PATTERN.test(route.id)
+    ? route.id
+    : route.id.toLowerCase();
+  return `youtube:${route.mode}:${id}`;
+}
+
 export type WebSocketRoute =
   | { kind: "legacy"; mode: YouTubeSourceMode; id: string }
   | { kind: "source"; route: SourceRoute };

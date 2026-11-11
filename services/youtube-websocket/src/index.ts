@@ -6,7 +6,7 @@ import { KickSourceWorker } from "./sources/kick";
 import { YouTubeSourceWorker } from "./sources/youtube";
 import { getYouTubeProxyUrl, resolveLiveVideoIds } from "./youtube";
 import { searchKickChannels } from "./kickSearch";
-import { resolveWebSocketRoute, type SourceRoute, type WebSocketRoute } from "./routes";
+import { resolveWebSocketRoute, sourceKey, type SourceRoute, type WebSocketRoute } from "./routes";
 import {
   hasForwardedHeaders,
   resolveBridgeLimits,
@@ -110,12 +110,6 @@ async function openLegacyYouTubeChat(ws: ServerWebSocket<WebSocketData>) {
     id: ws.data.id,
     videoIds,
   });
-}
-
-function sourceKey(route: SourceRoute) {
-  return route.platform === "youtube"
-    ? `youtube:${route.mode}:${route.id.toLowerCase()}`
-    : `kick:${route.id.toLowerCase()}`;
 }
 
 function sourcePlatform(route: SourceRoute): ChatSourcePlatform {

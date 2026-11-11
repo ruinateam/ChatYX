@@ -1,7 +1,17 @@
 import { describe, expect, test } from "bun:test";
-import { resolveWebSocketRoute, type RouteLimits } from "./routes";
+import { resolveWebSocketRoute, sourceKey, type RouteLimits } from "./routes";
 
 const LIMITS: RouteLimits = { maxChannelNameLength: 64 };
+
+test("source keys preserve case-sensitive YouTube channel and video IDs", () => {
+  const upper = sourceKey({ platform: "youtube", mode: "channel", id: "UC1234567890abcdefghijkl" });
+  const lower = sourceKey({ platform: "youtube", mode: "channel", id: "UC1234567890Abcdefghijkl" });
+  expect(upper).not.toBe(lower);
+  expect(sourceKey({ platform: "youtube", mode: "stream", id: "dQw4w9WgXcQ" }))
+    .not.toBe(sourceKey({ platform: "youtube", mode: "stream", id: "dqw4w9WgXcQ" }));
+  expect(sourceKey({ platform: "youtube", mode: "channel", id: "@SomeHandle" }))
+    .toBe(sourceKey({ platform: "youtube", mode: "channel", id: "@somehandle" }));
+});
 
 describe("websocket route resolution", () => {
   test("accepts the generated overlay links", () => {
