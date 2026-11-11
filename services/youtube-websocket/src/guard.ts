@@ -204,7 +204,7 @@ export function isPrivateClientAddress(ip: string): boolean {
   if (!ip || ip === "unknown") return false;
   if (ip === "::1" || ip === "0:0:0:0:0:0:0:1") return true;
   if (/^f[cd][0-9a-f]{2}:/.test(ip)) return true;
-  if (/^fe80:/.test(ip)) return true;
+  if (ip.startsWith("fe80:")) return true;
 
   const octets = ip.split(".").map(Number);
   if (octets.length !== 4 || octets.some((octet) => !Number.isInteger(octet))) return false;
